@@ -29,43 +29,57 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
+import org.w3c.dom.NodeList;
 
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
+import java.util.Iterator;
+
+public class DOMNodeList
+  extends DOMWrapper<NodeList>
 {
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+
+  DOMNodeList(DOMImplementation impl, NodeList nodeList)
   {
-    super(impl, delegate);
+    super(impl, nodeList);
   }
 
-  public DOMNamedNodeMap getEntities()
+  public DOMNode item(int index)
   {
-    return wrap(_delegate.getEntities());
+    return wrap(_delegate.item(index));
   }
 
-  public String getInternalSubset()
+  public int getLength()
   {
-    return _delegate.getInternalSubset();
+    return _delegate.getLength();
   }
 
-  public String getName()
+  public Iterator<DOMNode> iterator()
   {
-    return _delegate.getName();
+    return new DOMNodeListIterator();
   }
 
-  public DOMNamedNodeMap getNotations()
+  public class DOMNodeListIterator
+    implements Iterator<DOMNode>
   {
-    return wrap(_delegate.getNotations());
+    private int _index;
+
+    public boolean hasNext()
+    {
+      return _index < getLength();
+    }
+
+    public DOMNode next()
+    {
+      return item(_index++);
+    }
+
+    public void remove()
+    {
+      throw new UnsupportedOperationException();
+    }
   }
 
-  public String getPublicId()
+  public String toString()
   {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
+    return getClass().getSimpleName();
   }
 }

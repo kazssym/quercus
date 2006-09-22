@@ -29,43 +29,31 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
+import org.w3c.dom.TypeInfo;
 
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
+public class DOMTypeInfo
+  extends DOMWrapper<TypeInfo>
 {
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+
+  DOMTypeInfo(DOMImplementation impl, TypeInfo delegate)
   {
     super(impl, delegate);
   }
 
-  public DOMNamedNodeMap getEntities()
+  public String getTypeName()
   {
-    return wrap(_delegate.getEntities());
+    return _delegate.getTypeName();
   }
 
-  public String getInternalSubset()
+  public String getTypeNamespace()
   {
-    return _delegate.getInternalSubset();
+    return _delegate.getTypeNamespace();
   }
 
-  public String getName()
+  public boolean isDerivedFrom(String typeNamespaceArg,
+                               String typeNameArg,
+                               int derivationMethod)
   {
-    return _delegate.getName();
-  }
-
-  public DOMNamedNodeMap getNotations()
-  {
-    return wrap(_delegate.getNotations());
-  }
-
-  public String getPublicId()
-  {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
+    return _delegate.isDerivedFrom(typeNamespaceArg, typeNameArg, derivationMethod);
   }
 }

@@ -29,43 +29,43 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
-
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
+public class DOMConfiguration
+  extends DOMWrapper<org.w3c.dom.DOMConfiguration>
 {
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+  DOMConfiguration(DOMImplementation impl, org.w3c.dom.DOMConfiguration delegate)
   {
     super(impl, delegate);
   }
 
-  public DOMNamedNodeMap getEntities()
+  public boolean canSetParameter(String name, Object value)
   {
-    return wrap(_delegate.getEntities());
+    return _delegate.canSetParameter(name, value);
   }
 
-  public String getInternalSubset()
+  public Object getParameter(String name)
+    throws DOMException
   {
-    return _delegate.getInternalSubset();
+    try {
+      return wrap(_delegate.getParameter(name));
+    }
+    catch (org.w3c.dom.DOMException ex) {
+      throw wrap(ex);
+    }
   }
 
-  public String getName()
+  public DOMStringList getParameterNames()
   {
-    return _delegate.getName();
+    return wrap(_delegate.getParameterNames());
   }
 
-  public DOMNamedNodeMap getNotations()
+  public void setParameter(String name, Object value)
+    throws DOMException
   {
-    return wrap(_delegate.getNotations());
-  }
-
-  public String getPublicId()
-  {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
+    try {
+      _delegate.setParameter(name, value);
+    }
+    catch (org.w3c.dom.DOMException ex) {
+      throw wrap(ex);
+    }
   }
 }

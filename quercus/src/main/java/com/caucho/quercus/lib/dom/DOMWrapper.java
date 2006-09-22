@@ -29,43 +29,36 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
+import com.caucho.quercus.env.Env;
 
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
-{
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+public class DOMWrapper<T> {
+  private final DOMImplementation _impl;
+  final T _delegate;
+
+  protected static DOMImplementation getImpl(Env env)
   {
-    super(impl, delegate);
+    return DOMImplementation.get(env);
   }
 
-  public DOMNamedNodeMap getEntities()
+  public DOMWrapper(DOMImplementation impl, T delegate)
   {
-    return wrap(_delegate.getEntities());
+    _impl = impl;
+    _delegate = delegate;
   }
 
-  public String getInternalSubset()
+  protected DOMImplementation getImpl()
   {
-    return _delegate.getInternalSubset();
+    return _impl;
   }
 
-  public String getName()
+  protected <T> T wrap(Object obj)
   {
-    return _delegate.getName();
+    return (T) _impl.getWrapper(obj);
   }
 
-  public DOMNamedNodeMap getNotations()
+  protected DOMException wrap(org.w3c.dom.DOMException ex)
   {
-    return wrap(_delegate.getNotations());
+    return (DOMException) _impl.getWrapper(ex);
   }
 
-  public String getPublicId()
-  {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
-  }
 }

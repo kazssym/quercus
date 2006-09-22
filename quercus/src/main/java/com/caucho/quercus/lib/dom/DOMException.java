@@ -29,43 +29,19 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
-
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
+public class DOMException
+  extends org.w3c.dom.DOMException
 {
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+  private DOMImplementation _impl;
+  private org.w3c.dom.DOMException _delegate;
+
+  public DOMException(DOMImplementation impl, org.w3c.dom.DOMException delegate)
   {
-    super(impl, delegate);
+    super(delegate.code, delegate.getMessage());
+
+    _impl = impl;
+    _delegate = delegate;
   }
 
-  public DOMNamedNodeMap getEntities()
-  {
-    return wrap(_delegate.getEntities());
-  }
-
-  public String getInternalSubset()
-  {
-    return _delegate.getInternalSubset();
-  }
-
-  public String getName()
-  {
-    return _delegate.getName();
-  }
-
-  public DOMNamedNodeMap getNotations()
-  {
-    return wrap(_delegate.getNotations());
-  }
-
-  public String getPublicId()
-  {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
-  }
+  // XXX:
 }

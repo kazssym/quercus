@@ -29,43 +29,15 @@
 
 package com.caucho.quercus.lib.dom;
 
-import org.w3c.dom.DocumentType;
+import org.w3c.dom.Notation;
 
-public class DOMDocumentType
-  extends DOMNode<DocumentType>
+public class DOMNotation
+  extends DOMNode<Notation>
 {
-  DOMDocumentType(DOMImplementation impl, DocumentType delegate)
+  DOMNotation(DOMImplementation impl, Notation delegate)
   {
     super(impl, delegate);
   }
-
-  public DOMNamedNodeMap getEntities()
-  {
-    return wrap(_delegate.getEntities());
-  }
-
-  public String getInternalSubset()
-  {
-    return _delegate.getInternalSubset();
-  }
-
-  public String getName()
-  {
-    return _delegate.getName();
-  }
-
-  public DOMNamedNodeMap getNotations()
-  {
-    return wrap(_delegate.getNotations());
-  }
-
-  public String getPublicId()
-  {
-    return _delegate.getPublicId();
-  }
-
-  public String getSystemId()
-  {
-    return _delegate.getSystemId();
-  }
+  
+  // no methods
 }
