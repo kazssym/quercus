@@ -27,29 +27,57 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.repository;
+package com.caucho.log;
+
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
- * Exception for the module not found.
+ * Wrapper for a level-based handler.
  */
-public class ModuleNotFoundException extends RuntimeException
-{
-  public ModuleNotFoundException()
+public class LevelHandler extends Handler {
+  private final int _level;
+  private final Handler []_handlers;
+
+  public LevelHandler(Level level, Handler []handlers)
   {
+    _level = level.intValue();
+    _handlers = handlers;
   }
 
-  public ModuleNotFoundException(String msg)
+  /**
+   * Publishes the record.
+   */
+  public void publish(LogRecord record)
   {
-    super(msg);
+    int recordLevel = record.getLevel().intValue();
+
+    if (recordLevel < _level)
+      return;
+
+    for (int i = 0; i < _handlers.length; i++) {
+      Handler handler = _handlers[i];
+
+      if (_level <= handler.getLevel().intValue())
+	handler.publish(record);
+    }
   }
 
-  public ModuleNotFoundException(String msg, Throwable e)
+  /**
+   * Flush the handler.
+   */
+  public void flush()
   {
-    super(msg, e);
+    for (int i = 0; i < _handlers.length; i++) {
+      Handler handler = _handlers[i];
+
+      if (_level <= handler.getLevel().intValue())
+	handler.flush();
+    }
   }
 
-  public ModuleNotFoundException(Throwable e)
+  public void close()
   {
-    super(e);
   }
 }

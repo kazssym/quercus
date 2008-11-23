@@ -19,62 +19,68 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.server.repository;
+package com.caucho.log;
 
 import com.caucho.config.ConfigException;
-import com.caucho.loader.EnvironmentLocal;
-import com.caucho.loader.ivy.IvyPattern;
-import com.caucho.util.L10N;
-import com.caucho.server.cache.TempFileInode;
-import com.caucho.server.resin.Resin;
-import com.caucho.vfs.Path;
+import com.caucho.vfs.WriteStream;
 
-import java.io.InputStream;
-import java.util.ArrayList;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 
 /**
- * The module repository holds the module jars for osgi and ivy.
+ * Configuration for the standard output log
  */
-public class InodeDataSource implements DataSource
-{
-  private String _name;
-  private TempFileInode _inode;
-
-  InodeDataSource(String name, TempFileInode inode)
+public class StderrLog extends RotateLog {
+  private String _timestamp;
+  
+  /**
+   * Creates the StdoutLog
+   */
+  public StderrLog()
   {
-    _name = name;
-    _inode = inode;
+    // setTimestamp("[%Y/%m/%d %H:%M:%S.%s] ");
+  }
+  
+  /**
+   * Returns the tag name.
+   */
+  public String getTagName()
+  {
+    return "stderr-log";
   }
 
-  public String getName()
+  /**
+   * Sets the timestamp.
+   */
+  public void setTimestamp(String timestamp)
   {
-    return _name;
+    _timestamp = timestamp;
   }
-
-  public InputStream openInputStream()
+  
+  /**
+   * Initialize the log.
+   */
+  @PostConstruct
+  public void init()
+    throws ConfigException, IOException
   {
-    return _inode.openInputStream();
-  }
+    super.init();
 
-  public void close()
-  {
-    TempFileInode inode = _inode;
-    _inode = null;
+    WriteStream out = getRotateStream().getStream();
 
-    if (inode != null)
-      inode.free();
-  }
+    if (_timestamp != null) {
+      out = new WriteStream(new TimestampFilter(out, _timestamp));
+    }
 
-  protected void finalize()
-  {
-    close();
+    EnvironmentStream.setStderr(out);
   }
 }
+
+

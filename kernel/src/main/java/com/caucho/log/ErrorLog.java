@@ -19,37 +19,62 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.repository;
+package com.caucho.log;
+
+import com.caucho.config.ConfigException;
+import com.caucho.config.types.Period;
+import com.caucho.vfs.Path;
 
 /**
- * Exception for the module not found.
+ * Configuration for the error-log pattern (backwards compat).
  */
-public class ModuleNotFoundException extends RuntimeException
-{
-  public ModuleNotFoundException()
+public class ErrorLog {
+  private LogConfig _logConfig = new LogConfig();
+  public ErrorLog()
+    throws ConfigException
   {
+    _logConfig.setName("");
+    _logConfig.setLevel("info");
+    _logConfig.setTimestamp("[%Y/%m/%d %H:%M:%S.%s] ");
   }
-
-  public ModuleNotFoundException(String msg)
+  
+  /**
+   * Sets the error log path (compat).
+   */
+  public void setId(Path path)
   {
-    super(msg);
+    _logConfig.setPath(path);
   }
-
-  public ModuleNotFoundException(String msg, Throwable e)
+  
+  /**
+   * Sets the error log path (compat).
+   */
+  public void setTimestamp(String timestamp)
   {
-    super(msg, e);
+    _logConfig.setTimestamp(timestamp);
   }
-
-  public ModuleNotFoundException(Throwable e)
+  
+  /**
+   * Sets the rotate period (compat).
+   */
+  public void setRolloverPeriod(Period period)
   {
-    super(e);
+    _logConfig.setRolloverPeriod(period);
+  }
+  
+  /**
+   * Returns the tag name.
+   */
+  public String getTagName()
+  {
+    return "error-log";
   }
 }
+

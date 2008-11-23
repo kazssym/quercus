@@ -19,37 +19,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.repository;
+package com.caucho.log;
+
+import java.util.logging.Logger;
 
 /**
- * Exception for the module not found.
+ * A trivial implementation that allows Resin to instantiate its own
+ * loggers.
  */
-public class ModuleNotFoundException extends RuntimeException
-{
-  public ModuleNotFoundException()
+class LoggerImpl extends Logger {
+  public LoggerImpl(String name, String resourceBundleName)
   {
-  }
-
-  public ModuleNotFoundException(String msg)
-  {
-    super(msg);
-  }
-
-  public ModuleNotFoundException(String msg, Throwable e)
-  {
-    super(msg, e);
-  }
-
-  public ModuleNotFoundException(Throwable e)
-  {
-    super(e);
+    super(name, resourceBundleName);
   }
 }

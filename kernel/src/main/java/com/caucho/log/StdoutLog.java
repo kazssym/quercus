@@ -27,29 +27,61 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.repository;
+package com.caucho.log;
+
+import com.caucho.config.ConfigException;
+import com.caucho.vfs.WriteStream;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 
 /**
- * Exception for the module not found.
+ * Configuration for the standard output log
  */
-public class ModuleNotFoundException extends RuntimeException
-{
-  public ModuleNotFoundException()
+public class StdoutLog extends RotateLog {
+  private String _timestamp;
+  
+  /**
+   * Creates the StdoutLog
+   */
+  public StdoutLog()
   {
+    // setTimestamp("[%Y/%m/%d %H:%M:%S.%s] ");
   }
 
-  public ModuleNotFoundException(String msg)
+  /**
+   * Returns the tag name.
+   */
+  public String getTagName()
   {
-    super(msg);
+    return "stdout-log";
   }
 
-  public ModuleNotFoundException(String msg, Throwable e)
+  /**
+   * Sets the timestamp.
+   */
+  public void setTimestamp(String timestamp)
   {
-    super(msg, e);
+    _timestamp = timestamp;
   }
-
-  public ModuleNotFoundException(Throwable e)
+  
+  /**
+   * Initialize the log.
+   */
+  @PostConstruct
+  public void init()
+    throws ConfigException, IOException
   {
-    super(e);
+    super.init();
+
+    WriteStream out = getRotateStream().getStream();
+
+    if (_timestamp != null) {
+      out = new WriteStream(new TimestampFilter(out, _timestamp));
+    }
+
+    EnvironmentStream.setStdout(out);
   }
 }
+
+
