@@ -27,57 +27,55 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.log.handler;
+package com.caucho.util;
 
-import com.caucho.util.L10N;
-import com.caucho.webbeans.manager.*;
-
+import java.util.concurrent.Executor;
 import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.logging.Filter;
-import java.util.logging.Handler;
 
 /**
- * raises a LogRecord as an event
+ * A generic pool of threads available for Alarms and Work tasks.
  */
-public class EventHandler extends Handler {
+public class ResinThreadPoolExecutor implements Executor {
+  private static final L10N L = new L10N(ResinThreadPoolExecutor.class);
   private static final Logger log
-    = Logger.getLogger(EventHandler.class.getName());
-  private static final L10N L = new L10N(EventHandler.class);
+    = Logger.getLogger(ResinThreadPoolExecutor.class.getName());
 
-  private WebBeansContainer _webBeans = WebBeansContainer.create();
+  private static ResinThreadPoolExecutor _service
+    = new ResinThreadPoolExecutor();
+    
+  private ThreadPool _threadPool = ThreadPool.getThreadPool();
 
-  /**
-   * Publishes the record.
-   */
-  public void publish(LogRecord record)
-  {
-    if (record.getLevel().intValue() < getLevel().intValue())
-      return;
-
-    Filter filter = getFilter();
-    if (filter != null && ! filter.isLoggable(record))
-      return;
-
-    _webBeans.fireEvent(record);
-  }
-
-  /**
-   * Flushes the buffer.
-   */
-  public void flush()
+  private ResinThreadPoolExecutor()
   {
   }
 
-  /**
-   * Closes the handler.
-   */
-  public void close()
+  public static ResinThreadPoolExecutor getThreadPool()
   {
+    return _service;
+  }
+
+  //
+  // java.util.concurrent
+  //
+
+  public void execute(Runnable task)
+  {
+    if (task == null)
+      throw new NullPointerException();
+    
+    _threadPool.schedule(task);
+  }
+
+  /**
+   * Resets the thread pool, letting old threads drain.
+   */
+  public void stopEnvironment(ClassLoader env)
+  {
+    _threadPool.closeEnvironment(env);
   }
 
   public String toString()
   {
-    return getClass().getSimpleName() + "[]";
+    return "ResinThreadPoolExecutor[]";
   }
 }

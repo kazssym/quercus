@@ -19,36 +19,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *   Free SoftwareFoundation, Inc.
+ *
+ *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.log;
+package com.caucho.management.server;
 
-import java.util.logging.Logger;
+import com.caucho.config.ConfigException;
 
 /**
- * Static facade.
+ * Interface for a logger, letting applications change the logging level.
+ *
+ * <pre>
+ * resin:type=Logger,name=com.caucho.server.cluster
+ * </pre>
  */
-public class Log {
+public interface LoggerMXBean extends ManagedObjectMXBean {
   /**
-   * Returns the logger for a class.
+   * Returns the level.
    */
-  public static Logger open(Class cl)
-  {
-    try {
-      return Logger.getLogger(cl.getName());
-    } catch (RuntimeException e) {
-      e.printStackTrace();
-      throw e;
-    } catch (Error e) {
-      e.printStackTrace();
-      throw e;
-    }
-  }
-
-  private Log() {}
+  public String getLevel();
+  
+  /**
+   * Sets the level.
+   */
+  public void setLevel(String level)
+    throws ConfigException;
 }
