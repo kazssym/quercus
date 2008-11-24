@@ -19,38 +19,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans;
+package com.caucho.vfs;
 
-import javax.webbeans.*;
+import java.util.Map;
 
-/**
- * Utility class for creating @Name annotations
- */
-public final class Names {
-  /**
-   * Creates a new @Named annotation with the given value
-   */
-  public static Name create(String value)
+public class MemoryScheme extends MemoryPath {
+  public MemoryScheme()
   {
-    final String name = value;
-    
-    return new Name() {
-      public Class annotationType() { return Name.class; }
+    super(null, "/", null, "/");
+  }
 
-      public String value() { return name; }
-
-      public String toString()
-      {
-	return "@Name('" + name + "')";
-      }
-    };
+  public Path fsWalk(String userPath,
+		     Map<String,Object> attributes,
+		     String path)
+  {
+    return Vfs.lookup().lookup(path);
   }
 }
