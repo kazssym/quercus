@@ -36,4 +36,5 @@ import javax.webbeans.AnnotationLiteral;
  * Represents the @Current annotation
  */
 public class CurrentLiteral extends AnnotationLiteral<Current> {
+  public static final CurrentLiteral CURRENT = new CurrentLiteral();
 }
