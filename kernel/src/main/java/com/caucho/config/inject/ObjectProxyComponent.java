@@ -27,43 +27,68 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans.cfg;
+package com.caucho.config.inject;
 
-import com.caucho.config.*;
-import com.caucho.config.j2ee.*;
+import com.caucho.config.ConfigContext;
+import com.caucho.config.inject.ComponentImpl;
 import com.caucho.config.manager.InjectManager;
-import com.caucho.config.types.*;
-import com.caucho.util.*;
-import com.caucho.naming.*;
-import com.caucho.webbeans.*;
-import com.caucho.config.inject.*;
+import com.caucho.config.scope.ScopeContext;
 
-import java.lang.reflect.*;
 import java.lang.annotation.*;
-
-import javax.annotation.*;
+import javax.naming.*;
 import javax.webbeans.*;
 
+import com.caucho.naming.*;
+import com.caucho.webbeans.manager.*;
+
 /**
- * Configuration for the xml interceptor component.
+ * Component for a singleton beans
  */
-public class InterceptorConfig {
-  private static final L10N L = new L10N(InterceptorConfig.class);
+public class ObjectProxyComponent extends ComponentImpl {
+  private static final Object []NULL_ARGS = new Object[0];
 
-  private Class _class;
+  private ObjectProxy _proxy;
+  private Class _type;
 
-  public void setClass(Class cl)
+  public ObjectProxyComponent(InjectManager webBeans,
+                              ObjectProxy proxy,
+                              Class type)
   {
-    _class = cl;
+    super(webBeans);
+    
+    _proxy = proxy;
+    setTargetType(type);
   }
 
-  @PostConstruct
-  public void init()
+  @Override
+  public void setScope(ScopeContext scope)
   {
-    if (_class == null)
-      throw new ConfigException(L.l("'class' is a required attribute of <interceptor>"));
-    
-    InjectManager webBeans = InjectManager.create();
-    webBeans.addInterceptor(new InterceptorBean(_class));
+  }
+
+  @Override
+  public Object get()
+  {
+    try {
+      return _proxy.createObject(null);
+    } catch (NamingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Object get(ConfigContext env)
+  {
+    return get();
+  }
+
+  @Override
+  public Object create()
+  {
+    return get();
+  }
+
+  protected Object createNew()
+  {
+    throw new IllegalStateException();
   }
 }
