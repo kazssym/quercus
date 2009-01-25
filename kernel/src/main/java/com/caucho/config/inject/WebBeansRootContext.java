@@ -19,36 +19,56 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *   Free SoftwareFoundation, Inc.
+ *
+ *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans.manager;
+package com.caucho.config.inject;
 
-import com.caucho.config.manager.InjectManager;
-import com.caucho.naming.ObjectProxy;
+import com.caucho.vfs.*;
 
-import java.util.Hashtable;
-import javax.naming.NamingException;
+import java.util.ArrayList;
 
 /**
- * The JNDI proxy for Manager
+ * Scanned data for the root context
  */
-public class WebBeansJndiProxy implements ObjectProxy, java.io.Serializable
-{
-  /**
-   * Creates the object from the proxy.
-   *
-   * @param env the calling environment
-   *
-   * @return the object named by the proxy.
-   */
-  public Object createObject(Hashtable env)
-    throws NamingException
+public class WebBeansRootContext  {
+  private final Path _root;
+  
+  private ArrayList<String> _classList = new ArrayList<String>();
+  private boolean _isScanComplete;
+  
+  public WebBeansRootContext(Path root)
   {
-    return InjectManager.create();
+    _root = root;
+  }
+
+  public Path getRoot()
+  {
+    return _root;
+  }
+
+  public void addClassName(String className)
+  {
+    _classList.add(className);
+  }
+
+  public ArrayList<String> getClassNameList()
+  {
+    return _classList;
+  }
+
+  public boolean isScanComplete()
+  {
+    return _isScanComplete;
+  }
+
+  public void setScanComplete(boolean isScanComplete)
+  {
+    _isScanComplete = isScanComplete;
   }
 }

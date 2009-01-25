@@ -19,27 +19,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans.manager;
+package com.caucho.config.inject;
 
-import com.caucho.config.inject.CauchoBean;
+import com.caucho.naming.ObjectProxy;
 
-import java.lang.annotation.Annotation;
-import javax.inject.manager.Manager;
+import java.util.Hashtable;
+import javax.naming.NamingException;
 
 /**
- * Registers beans on startup
+ * The JNDI proxy for Manager
  */
-public interface BeanRegistrationListener
+public class WebBeansJndiProxy implements ObjectProxy, java.io.Serializable
 {
-  public boolean isMatch(Annotation ann);
-
-  public void start(Manager manager, CauchoBean bean);
+  /**
+   * Creates the object from the proxy.
+   *
+   * @param env the calling environment
+   *
+   * @return the object named by the proxy.
+   */
+  public Object createObject(Hashtable env)
+    throws NamingException
+  {
+    return InjectManager.create();
+  }
 }

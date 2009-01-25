@@ -27,48 +27,14 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans.manager;
+package com.caucho.config.inject;
 
-import com.caucho.vfs.*;
-
-import java.util.ArrayList;
+import javax.inject.Current;
+import javax.inject.AnnotationLiteral;
 
 /**
- * Scanned data for the root context
+ * Represents the @Current annotation
  */
-public class WebBeansRootContext  {
-  private final Path _root;
-  
-  private ArrayList<String> _classList = new ArrayList<String>();
-  private boolean _isScanComplete;
-  
-  public WebBeansRootContext(Path root)
-  {
-    _root = root;
-  }
-
-  public Path getRoot()
-  {
-    return _root;
-  }
-
-  public void addClassName(String className)
-  {
-    _classList.add(className);
-  }
-
-  public ArrayList<String> getClassNameList()
-  {
-    return _classList;
-  }
-
-  public boolean isScanComplete()
-  {
-    return _isScanComplete;
-  }
-
-  public void setScanComplete(boolean isScanComplete)
-  {
-    _isScanComplete = isScanComplete;
-  }
+public class CurrentLiteral extends AnnotationLiteral<Current> {
+  public static final CurrentLiteral CURRENT = new CurrentLiteral();
 }

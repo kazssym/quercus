@@ -27,7 +27,7 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.webbeans;
+package com.caucho.config;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
