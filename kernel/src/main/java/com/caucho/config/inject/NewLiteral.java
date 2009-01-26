@@ -27,30 +27,18 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.scope;
+package com.caucho.config.inject;
 
-import java.util.*;
-import javax.context.Contextual;
+import javax.inject.AnnotationLiteral;
+import javax.inject.New;
 
 /**
- * The singleton scope value
+ * Represents the @New annotation
  */
-public class ScopeMap<T> {
-  private transient final HashMap<Contextual<T>,T> _map
-    = new HashMap<Contextual<T>,T>(8);
-  
-  public T get(Contextual<T> bean)
+public class NewLiteral extends AnnotationLiteral<New> {
+  public static final NewLiteral NEW = new NewLiteral();
+
+  private NewLiteral()
   {
-    return _map.get(bean);
-  }
-  
-  public void put(Contextual<T> bean, T value)
-  {
-    _map.put(bean, value);
-  }
-  
-  public void remove(Contextual<T> bean)
-  {
-    _map.remove(bean);
   }
 }

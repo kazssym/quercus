@@ -29,28 +29,17 @@
 
 package com.caucho.config.scope;
 
-import java.util.*;
-import javax.context.Contextual;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
+import javax.context.*;
 /**
- * The singleton scope value
+ * The @EnvironmentScoped represents an instance for each Resin environment.
  */
-public class ScopeMap<T> {
-  private transient final HashMap<Contextual<T>,T> _map
-    = new HashMap<Contextual<T>,T>(8);
-  
-  public T get(Contextual<T> bean)
-  {
-    return _map.get(bean);
-  }
-  
-  public void put(Contextual<T> bean, T value)
-  {
-    _map.put(bean, value);
-  }
-  
-  public void remove(Contextual<T> bean)
-  {
-    _map.remove(bean);
-  }
+@ScopeType
+@Target({TYPE, METHOD})
+@Retention(RUNTIME)
+public @interface EnvironmentScoped {
 }

@@ -27,30 +27,41 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.scope;
+package com.caucho.config.types;
 
 import java.util.*;
-import javax.context.Contextual;
+import java.lang.reflect.*;
+import java.lang.annotation.*;
 
 /**
- * The singleton scope value
+ * Custom bean configured by namespace
  */
-public class ScopeMap<T> {
-  private transient final HashMap<Contextual<T>,T> _map
-    = new HashMap<Contextual<T>,T>(8);
+public class CustomBeanFieldConfig {
+  private Field _field;
   
-  public T get(Contextual<T> bean)
+  private ArrayList<Annotation> _annotationList
+    = new ArrayList<Annotation>();
+
+  public CustomBeanFieldConfig(Field field)
   {
-    return _map.get(bean);
+    _field = field;
   }
-  
-  public void put(Contextual<T> bean, T value)
+
+  public Field getField()
   {
-    _map.put(bean, value);
+    return _field;
   }
-  
-  public void remove(Contextual<T> bean)
+
+  public void addAnnotation(Annotation ann)
   {
-    _map.remove(bean);
+    _annotationList.add(ann);
+  }
+
+  public Annotation []getAnnotations()
+  {
+    Annotation []annotations = new Annotation[_annotationList.size()];
+    _annotationList.toArray(annotations);
+
+    return annotations;
   }
 }
