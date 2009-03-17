@@ -27,39 +27,31 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.quercus.env;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Set;
+import java.io.Closeable;
 
-import javax.inject.manager.Bean;
-import javax.inject.manager.Manager;
+public class EnvCloseable implements EnvCleanup {
+  private Closeable _obj;
 
-/**
- * Configuration for the xml web bean component.
- */
-abstract public class CauchoBean<T> extends Bean<T>
-{
-  protected CauchoBean(Manager manager)
+  public EnvCloseable(Closeable obj)
   {
-    super(manager);
+    _obj = obj;
   }
-  
-  abstract public Set<BaseType> getGenericTypes();
-
-  /**
-   * Returns all of the custom annotations
+  /*
+   * This method is invoked after a Quercus request has been
+   * processed and the environment is being cleaned up.
+   * An object that implements the EnvCleanup interface
+   * will register itself with via Env.addCleanup() to
+   * ensure that resources are released when the script
+   * has finished executing. If an object's resources
+   * are explicitly cleaned up, the Env.removeCleanup()
+   * method should be invoked.
    */
-  abstract public Annotation []getAnnotations();
-
-  public boolean isAnnotationPresent(Class annType)
+  public void cleanup()
+    throws Exception
   {
-    for (Annotation ann : getAnnotations()) {
-      if (ann.annotationType().equals(annType))
-	return true;
-    }
-
-    return false;
+    _obj.close();
   }
 }
+
