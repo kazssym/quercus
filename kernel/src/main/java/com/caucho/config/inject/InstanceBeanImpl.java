@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2008 Caucho Technology -- all rights reserved
+ * Copyright (c) 1998-2007 Caucho Technology -- all rights reserved
  *
  * This file is part of Resin(R) Open Source
  *
@@ -29,41 +29,48 @@
 
 package com.caucho.config.inject;
 
-import com.caucho.config.*;
-import com.caucho.config.inject.ComponentImpl;
-import com.caucho.config.j2ee.*;
-import com.caucho.config.types.*;
-import com.caucho.util.*;
-import com.caucho.config.*;
-import com.caucho.config.cfg.*;
+import javax.inject.manager.*;
 
-import java.lang.reflect.*;
-import java.lang.annotation.*;
-import java.util.ArrayList;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.*;
+import javax.context.Contextual;
+import javax.context.Dependent;
 import javax.context.CreationalContext;
-import javax.inject.manager.Bean;
-import javax.inject.manager.InjectionPoint;
-import javax.inject.manager.BeanManager;
 
 /**
- * Configuration for a @Produces method
+ * Internal implementation for a Bean
  */
-public class ProducesInjectionPointBean<X> implements Bean<X> {
-  private static final L10N L = new L10N(ProducesInjectionPointBean.class);
-
-  private final ProducesBean _producesBean;
-  private final InjectionPoint _ij;
-
-  ProducesInjectionPointBean(ProducesBean producesBean,
-			     InjectionPoint ij)
+public class InstanceBeanImpl<T> implements Bean<T>
+{
+  private InjectManager _beanManager;
+  private Type _type;
+  private Annotation []_bindings;
+  
+  private InstanceImpl _instance;
+  
+  InstanceBeanImpl(InjectManager beanManager,
+		   Type type,
+		   Annotation []bindings)
   {
-    _producesBean = producesBean;
-    _ij = ij;
-  }
+    _beanManager = beanManager;
+    _type = type;
+    _bindings = bindings;
 
+    _instance = new InstanceImpl(_beanManager, _type, _bindings);
+  }
+  
+  public T create(CreationalContext<T> creationalContext)
+  {
+    return (T) _instance;
+  }
+  
+  public void destroy(T instance)
+  {
+  }
+  
   //
   // metadata for the bean
   //
@@ -73,7 +80,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public Set<Annotation> getBindings()
   {
-    return _producesBean.getBindings();
+    return null;
   }
 
   /**
@@ -81,7 +88,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public Class<? extends Annotation> getDeploymentType()
   {
-    return _producesBean.getDeploymentType();
+    return null;
   }
 
   /**
@@ -89,7 +96,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public Set<InjectionPoint> getInjectionPoints()
   {
-    return _producesBean.getInjectionPoints();
+    return new HashSet<InjectionPoint>();
   }
 
   /**
@@ -98,7 +105,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public String getName()
   {
-    return _producesBean.getName();
+    return null;
   }
 
   /**
@@ -106,7 +113,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public boolean isNullable()
   {
-    return _producesBean.isNullable();
+    return false;
   }
 
   /**
@@ -114,7 +121,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public boolean isSerializable()
   {
-    return _producesBean.isSerializable();
+    return true;
   }
 
   /**
@@ -122,7 +129,7 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public Class<? extends Annotation> getScopeType()
   {
-    return _producesBean.getScopeType();
+    return Dependent.class;
   }
 
   /**
@@ -130,59 +137,6 @@ public class ProducesInjectionPointBean<X> implements Bean<X> {
    */
   public Set<Type> getTypes()
   {
-    return _producesBean.getTypes();
-  }
-  
-  public Object create(CreationalContext creationalContext)
-  {
-    Object instance = _producesBean.produce(creationalContext);
-    //_producesBean.inject(instance);
-
-    return instance;
-  }
-  
-  /**
-   * Instantiate the bean.
-   */
-  public X instantiate()
-  {
-    return (X) _producesBean.instantiate();
-  }
-  
-  /**
-   * Inject the bean.
-   */
-  public void inject(X instance)
-  {
-  }
-  
-  /**
-   * Call post-construct
-   */
-  public void postConstruct(X instance)
-  {
-  }
-  
-  /**
-   * Call pre-destroy
-   */
-  public void preDestroy(X instance)
-  {
     throw new UnsupportedOperationException(getClass().getName());
   }
-  
-  /**
-   * Call destroy
-   */
-  public void destroy(X instance)
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-
-  /*
-  public void destroy(Object instance)
-  {
-    _producesBean.destroy(instance);
-  }
-  */
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2008 Caucho Technology -- all rights reserved
+ * Copyright (c) 1998-2009 Caucho Technology -- all rights reserved
  *
  * This file is part of Resin(R) Open Source
  *
@@ -29,34 +29,56 @@
 
 package com.caucho.config.inject;
 
-import javax.inject.manager.Bean;
-import javax.inject.manager.BeanManager;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.inject.manager.AnnotatedField;
+import javax.inject.manager.AnnotatedType;
 
 /**
- * An event at webbeans startup
+ * Abstract introspected view of a Bean
  */
-public class BeanStartupEvent {
-  private final BeanManager _manager;
-  private final Bean _bean;
-
-  public BeanStartupEvent(BeanManager manager, Bean bean)
+public class BeanFieldImpl
+  extends AnnotatedElementImpl implements AnnotatedField
+{
+  private AnnotatedType _declaringType;
+  
+  private Field _field;
+  
+  public BeanFieldImpl(AnnotatedType declaringType, Field field)
   {
-    _manager = manager;
-    _bean = bean;
+    super(field.getGenericType(), field.getAnnotations());
+
+    _declaringType = declaringType;
+    _field = field;
+
+    introspect(field);
   }
 
-  public BeanManager getManager()
+  public AnnotatedType getDeclaringType()
   {
-    return _manager;
+    return _declaringType;
+  }
+  
+  /**
+   * Returns the reflected Method
+   */
+  public Field getJavaMember()
+  {
+    return _field;
   }
 
-  public Bean getBean()
+  private void introspect(Field field)
   {
-    return _bean;
   }
 
+  @Override
   public String toString()
   {
-    return getClass().getSimpleName() + "[" + _bean + "]";
+    return getClass().getSimpleName() + "[" + _field + "]";
   }
 }

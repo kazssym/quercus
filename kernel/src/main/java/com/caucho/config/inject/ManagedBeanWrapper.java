@@ -29,16 +29,52 @@
 
 package com.caucho.config.inject;
 
-
+import javax.inject.manager.*;
 import java.lang.annotation.Annotation;
-import javax.inject.manager.BeanManager;
+import java.lang.reflect.Type;
+import java.util.Set;
+
+import javax.context.Contextual;
 
 /**
- * Registers beans on startup
+ * Internal implementation for a Bean
  */
-public interface BeanRegistrationListener
+public class ManagedBeanWrapper<X> extends BeanWrapper<X>
+  implements ManagedBean<X>
 {
-  public boolean isMatch(Annotation ann);
+  public ManagedBeanWrapper(ManagedBean<X> bean)
+  {
+    super(bean);
+  }
 
-  public void start(BeanManager manager, CauchoBean bean);
+  @Override
+  public ManagedBean<X> getBean()
+  {
+    return (ManagedBean<X>) super.getBean();
+  }
+  
+  public Set<ProducerBean<X,?>> getProducerBeans()
+  {
+    return getBean().getProducerBeans();
+  }
+
+  public Set<ObserverMethod<X,?>> getObserverMethods()
+  {
+    return getBean().getObserverMethods();
+  }
+
+  public AnnotatedType getAnnotatedType()
+  {
+    return getBean().getAnnotatedType();
+  }
+
+  public InjectionTarget<X> getInjectionTarget()
+  {
+    return getBean().getInjectionTarget();
+  }
+
+  public Set<InjectionPoint> getInjectionPoints()
+  {
+    return getBean().getInjectionPoints();
+  }
 }

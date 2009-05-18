@@ -24,53 +24,23 @@
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
- * @author Scott Ferguson
+ * @author Scott Ferguson;
  */
 
-package com.caucho.config.cfg;
+package com.caucho.config.program;
+
+import com.caucho.config.*;
+import com.caucho.config.scope.DependentScope;
+import com.caucho.config.type.*;
+import com.caucho.xml.QName;
 
 /**
- * Configuration for the xml component type.
+ * A saved program for creating a constructor argument
  */
-public class WbComponentType {
-  private Class _type;
-  private int _priority = -1;
-
-  public WbComponentType(Class type)
+public abstract class Arg {
+  public void bind()
   {
-    _type = type;
-
-    if (type == null)
-      throw new NullPointerException();
   }
-
-  public void setType(Class type)
-  {
-    _type = type;
-  }
-
-  public Class getType()
-  {
-    return _type;
-  }
-
-  public void setPriority(int priority)
-  {
-    _priority = priority;
-  }
-
-  public int getPriority()
-  {
-    return _priority;
-  }
-
-  public boolean isEnabled()
-  {
-    return _priority >= 0;
-  }
-
-  public String toString()
-  {
-    return getClass().getSimpleName() + "[@" + _type.getSimpleName() + "]";
-  }
+    
+  abstract public Object eval(ConfigContext env);
 }

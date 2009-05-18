@@ -29,6 +29,7 @@
 
 package com.caucho.config.inject;
 
+import javax.inject.manager.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -36,54 +37,59 @@ import java.util.Set;
 import javax.context.Contextual;
 import javax.context.CreationalContext;
 
-import javax.inject.manager.Bean;
-import javax.inject.manager.InjectionPoint;
-import javax.inject.manager.BeanManager;
-
 /**
- * Configuration for the xml web bean component.
+ * Internal implementation for a Bean
  */
-public class InjectionPointBean<T> implements Bean<T>
+public class BeanWrapper<T> implements Bean<T>
 {
-  public InjectionPointBean(BeanManager manager)
+  private final Bean<T> _bean;
+
+  public BeanWrapper(Bean<T> bean)
   {
+    _bean = bean;
   }
 
+  protected Bean<T> getBean()
+  {
+    return _bean;
+  }
+
+  //
+  // from javax.inject.InjectionTarget
+  //
+  
+  public T create(CreationalContext<T> cxt)
+  {
+    return getBean().create(cxt);
+  }
+
+  public void destroy(T instance)
+  {
+    getBean().destroy(instance);
+  }
+      
   //
   // metadata for the bean
   //
 
-  /**
-   * Returns the bean's binding annotations.
-   */
   public Set<Annotation> getBindings()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getBindings();
   }
 
-  /**
-   * Returns the bean's deployment type
-   */
   public Class<? extends Annotation> getDeploymentType()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getDeploymentType();
   }
 
-  /**
-   * Returns the set of injection points, for validation.
-   */
   public Set<InjectionPoint> getInjectionPoints()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getInjectionPoints();
   }
 
-  /**
-   * Returns the bean's name or null if the bean does not have a
-   * primary name.
-   */
   public String getName()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getName();
   }
 
   /**
@@ -91,7 +97,7 @@ public class InjectionPointBean<T> implements Bean<T>
    */
   public boolean isNullable()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().isNullable();
   }
 
   /**
@@ -99,7 +105,7 @@ public class InjectionPointBean<T> implements Bean<T>
    */
   public boolean isSerializable()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().isSerializable();
   }
 
   /**
@@ -107,7 +113,7 @@ public class InjectionPointBean<T> implements Bean<T>
    */
   public Class<? extends Annotation> getScopeType()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getScopeType();
   }
 
   /**
@@ -115,47 +121,12 @@ public class InjectionPointBean<T> implements Bean<T>
    */
   public Set<Type> getTypes()
   {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-  
-  public T create(CreationalContext<T> creationalContext)
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-  /**
-   * Instantiate the bean.
-   */
-  public T instantiate()
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-  
-  /**
-   * Inject the bean.
-   */
-  public void inject(T instance)
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-  
-  /**
-   * Call post-construct
-   */
-  public void postConstruct(T instance)
-  {
-    throw new UnsupportedOperationException(getClass().getName());
-  }
-  
-  /**
-   * Call pre-destroy
-   */
-  public void preDestroy(T instance)
-  {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getBean().getTypes();
   }
 
-  public void destroy(T instance)
+  @Override
+  public String toString()
   {
-    throw new UnsupportedOperationException(getClass().getName());
+    return getClass().getSimpleName() + "[" + _bean + "]";
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2008 Caucho Technology -- all rights reserved
+ * Copyright (c) 1998-2009 Caucho Technology -- all rights reserved
  *
  * This file is part of Resin(R) Open Source
  *
@@ -29,16 +29,47 @@
 
 package com.caucho.config.inject;
 
-
 import java.lang.annotation.Annotation;
-import javax.inject.manager.BeanManager;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.context.CreationalContext;
+import javax.inject.manager.AnnotatedCallable;
+import javax.inject.manager.AnnotatedConstructor;
+import javax.inject.manager.AnnotatedField;
+import javax.inject.manager.AnnotatedType;
+import javax.inject.manager.AnnotatedMethod;
+import javax.inject.manager.AnnotatedParameter;
 
 /**
- * Registers beans on startup
+ * Abstract introspected view of a Bean
  */
-public interface BeanRegistrationListener
+public class BeanParameterImpl
+  extends AnnotatedElementImpl implements AnnotatedParameter
 {
-  public boolean isMatch(Annotation ann);
+  private AnnotatedCallable _callable;
+  
+  public BeanParameterImpl(AnnotatedCallable callable,
+			   Type type,
+			   Annotation []annList)
+  {
+    super(type, annList);
 
-  public void start(BeanManager manager, CauchoBean bean);
+    _callable = callable;
+  }
+
+  public AnnotatedCallable getDeclaringCallable()
+  {
+    return _callable;
+  }
+
+  public int getPosition()
+  {
+    return -1;
+  }
 }
