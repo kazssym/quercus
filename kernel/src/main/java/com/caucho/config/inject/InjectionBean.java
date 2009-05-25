@@ -41,6 +41,7 @@ import java.util.Set;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ManagedBean;
 
 /**
@@ -52,36 +53,31 @@ import javax.enterprise.inject.spi.ManagedBean;
  * manager.addBean(new SingletonBean(myValue));
  * </pre></code>
  */
-public class SingletonBean extends AbstractSingletonBean
+public class InjectionBean extends AbstractSingletonBean
   implements Closeable
 {
-  private Object _value;
+  private InjectionTarget _target;
 
-  SingletonBean(ManagedBean managedBean,
+  InjectionBean(ManagedBean managedBean,
 		Set<Type> types,
 		Class<? extends Annotation> deploymentType,
 		Set<Annotation> bindings,
 		Class<? extends Annotation> scopeType,
 		String name,
-		Object value)
+		InjectionTarget target)
   {
     super(managedBean, types, deploymentType, bindings, scopeType, name);
 
-    _value = value;
+    _target = target;
   }
 
   @Override
   public Object create(CreationalContext env)
   {
-    return _value;
-  }
-
-  /**
-   * Frees the singleton on environment shutdown
-   */
-  public void close()
-  {
-    if (_value != null)
-      destroy(_value);
+    Object value = _target.produce(env);
+    _target.inject(value, env);
+    _target.postConstruct(value, env);
+    
+    return value;
   }
 }

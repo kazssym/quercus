@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2008 Caucho Technology -- all rights reserved
+ * Copyright (c) 1998-2007 Caucho Technology -- all rights reserved
  *
  * This file is part of Resin(R) Open Source
  *
@@ -29,55 +29,58 @@
 
 package com.caucho.config.inject;
 
-import com.caucho.config.ConfigContext;
-import com.caucho.config.inject.ComponentImpl;
-import com.caucho.config.scope.ScopeContext;
+import javax.enterprise.inject.spi.*;
 
-import java.lang.annotation.*;
-import javax.enterprise.inject.deployment.Production;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.enterprise.context.spi.CreationalContext;
 
 /**
- * Component for a singleton beans
+ * Abstract introspected view of a Bean injectible field
  */
-abstract public class FactoryComponent extends ComponentImpl {
-  public FactoryComponent(Class targetType, String name)
+abstract public class AbstractInjectionTarget<X> implements InjectionTarget<X>
+{
+  /**
+   * Instantiate the bean.
+   */
+  abstract public X produce(CreationalContext<X> ctx);
+  
+  /**
+   * Inject the bean.
+   */
+  public void inject(X instance, CreationalContext<X> ctx)
   {
-    super(InjectManager.create());
-
-    setTargetType(targetType);
-    setName(name);
-    setDeploymentType(Production.class);
+  }
+  
+  /**
+   * PostConstruct initialization
+   */
+  public void postConstruct(X instance, CreationalContext<X> ctx)
+  {
+  }
+  
+  /**
+   * Call pre-destroy
+   */
+  public void dispose(X instance)
+  {
+  }
+  
+  /**
+   * Call destroy
+   */
+  public void destroy(X instance)
+  {
   }
 
-  @Override
-  public void setScope(ScopeContext scope)
+  /**
+   * Returns the injection points.
+   */
+  public Set<InjectionPoint> getInjectionPoints()
   {
+    return new HashSet<InjectionPoint>();
   }
-
-  @Override
-  public Object get()
-  {
-    return get(null);
-  }
-
-  @Override
-  public Object get(ConfigContext env)
-  {
-    if (env != null) {
-      Object value = env.get(this);
-
-      if (value != null)
-	return value;
-
-      value = create();
-      
-      env.put(this, value);
-
-      return value;
-    }
-    else
-      return create();
-  }
-
-  abstract public Object create();
 }

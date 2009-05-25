@@ -29,63 +29,48 @@
 
 package com.caucho.config.inject;
 
-import com.caucho.config.ConfigContext;
-import com.caucho.config.inject.ComponentImpl;
-import com.caucho.config.scope.ScopeContext;
+import com.caucho.config.*;
+import com.caucho.config.j2ee.*;
+import com.caucho.config.program.ConfigProgram;
+import com.caucho.util.*;
+import com.caucho.config.cfg.*;
 
 import java.lang.annotation.*;
-import javax.naming.*;
+import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.*;
 
-import com.caucho.naming.*;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.BindingType;
+import javax.enterprise.inject.NonBinding;
+import javax.enterprise.inject.spi.Bean;
 
 /**
- * Component for a singleton beans
+ * Wrapper to handle @Specializes
  */
-public class ObjectProxyComponent extends ComponentImpl {
-  private static final Object []NULL_ARGS = new Object[0];
+public class RegisteredBean {
+  private final Bean _bean;
 
-  private ObjectProxy _proxy;
-  private Class _type;
+  private RegisteredBean _specialized;
 
-  public ObjectProxyComponent(InjectManager webBeans,
-                              ObjectProxy proxy,
-                              Class type)
+  RegisteredBean(Bean bean)
   {
-    super(webBeans);
-    
-    _proxy = proxy;
-    setTargetType(type);
+    _bean = bean;
   }
 
-  @Override
-  public void setScope(ScopeContext scope)
+  void setSpecializes(RegisteredBean specialized)
   {
+    _specialized = specialized;
   }
 
-  @Override
-  public Object get()
+  Bean getMostSpecialized()
   {
-    try {
-      return _proxy.createObject(null);
-    } catch (NamingException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
-  public Object get(ConfigContext env)
-  {
-    return get();
-  }
-
-  @Override
-  public Object create()
-  {
-    return get();
-  }
-
-  public Object createNew()
-  {
-    throw new IllegalStateException();
+    if (_specialized != null)
+      return _specialized.getMostSpecialized();
+    else
+      return _bean;
   }
 }
