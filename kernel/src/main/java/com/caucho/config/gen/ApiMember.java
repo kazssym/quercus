@@ -27,39 +27,47 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.config.gen;
 
-import com.caucho.loader.EnvironmentClassLoader;
-import com.caucho.loader.AddLoaderListener;
+import com.caucho.config.inject.AnnotatedElementImpl;
+
+import java.lang.reflect.*;
+import java.lang.annotation.*;
+import java.util.*;
 
 /**
- * Listener for environment creation to detect webbeans
+ * Represents an introspected method.
  */
-public class WebBeansAddLoaderListener implements AddLoaderListener
-{
-  public boolean isEnhancer()
-  {
-    return false;
-  }
+abstract public class ApiMember extends AnnotatedElementImpl {
+  private ApiClass _declaringClass;
   
   /**
-   * Handles the case where the environment is starting (after init).
+   * Creates a new method.
+   *
+   * @param topClass the top class
+   * @param method the introspected method
    */
-  public void addLoader(EnvironmentClassLoader loader)
+  public ApiMember(ApiClass declaringClass,
+		   Type type,
+		   Annotation []annotations)
   {
-    // the calls triggered from this callback cannot call Class.forName
-    // because the addLoader will be triggered itself from Class.forName
-    
-    InjectManager container = InjectManager.create(loader);
+    super(type, annotations);
 
-    // jpa/0046, jms/3e01
-    container.addLoader();
+    _declaringClass = declaringClass;
   }
 
-  public boolean equals(Object o)
+  /**
+   * Returns the declaring ApiClass
+   */
+  public ApiClass getDeclaringClass()
   {
-    return o instanceof WebBeansAddLoaderListener;
+    return _declaringClass;
+  }
+
+  abstract public Member getJavaMember();
+  
+  public String toString()
+  {
+    return getClass().getSimpleName() + "[" + getJavaMember() + "]";
   }
 }
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2008 Caucho Technology -- all rights reserved
+ * Copyright (c) 1998-2007 Caucho Technology -- all rights reserved
  *
  * This file is part of Resin(R) Open Source
  *
@@ -19,47 +19,28 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *
- *   Free Software Foundation, Inc.
+ *   Free SoftwareFoundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.config;
 
-import com.caucho.loader.EnvironmentClassLoader;
-import com.caucho.loader.AddLoaderListener;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+import java.lang.annotation.*;
+
+import javax.enterprise.inject.deployment.DeploymentType;
 
 /**
- * Listener for environment creation to detect webbeans
+ * Default deployment type for an XML file, with higher priority than
+ * Production.
  */
-public class WebBeansAddLoaderListener implements AddLoaderListener
-{
-  public boolean isEnhancer()
-  {
-    return false;
-  }
-  
-  /**
-   * Handles the case where the environment is starting (after init).
-   */
-  public void addLoader(EnvironmentClassLoader loader)
-  {
-    // the calls triggered from this callback cannot call Class.forName
-    // because the addLoader will be triggered itself from Class.forName
-    
-    InjectManager container = InjectManager.create(loader);
-
-    // jpa/0046, jms/3e01
-    container.addLoader();
-  }
-
-  public boolean equals(Object o)
-  {
-    return o instanceof WebBeansAddLoaderListener;
-  }
+@DeploymentType
+@Documented  
+@Retention(RUNTIME)
+@Target({METHOD, TYPE})
+public @interface Configured {
 }
-
-
