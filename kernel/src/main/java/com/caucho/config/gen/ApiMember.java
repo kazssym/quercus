@@ -35,6 +35,8 @@ import java.lang.reflect.*;
 import java.lang.annotation.*;
 import java.util.*;
 
+import javax.enterprise.inject.spi.Annotated;
+
 /**
  * Represents an introspected method.
  */
@@ -49,9 +51,10 @@ abstract public class ApiMember extends AnnotatedElementImpl {
    */
   public ApiMember(ApiClass declaringClass,
 		   Type type,
+		   Annotated annotated,
 		   Annotation []annotations)
   {
-    super(type, annotations);
+    super(type, annotated, annotations);
 
     _declaringClass = declaringClass;
   }
