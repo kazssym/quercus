@@ -71,6 +71,12 @@ class PeekString extends PeekStream {
     return ((StringValue) _string).createStringBuilder();
   }
 
+  @Override
+  public String getPattern()
+  {
+    return "/" + _string + "/";
+  }
+
   public String toString()
   {
     return "PeekString[" + _string + "]";
