@@ -28,21 +28,21 @@
 
 package com.caucho.config.j2ee;
 
-import com.caucho.config.ConfigException;
-import com.caucho.config.program.ValueGenerator;
-import com.caucho.util.L10N;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import com.caucho.config.ConfigException;
+import com.caucho.config.program.ValueGenerator;
+
 public class JndiValueGenerator extends ValueGenerator {
-  private static final L10N L = new L10N(JndiValueGenerator.class);
+  private final String _location;
+  private final String _jndiName;
+  private final Class<?> _type;
 
-  private String _jndiName;
-  private Class _type;
-
-  public JndiValueGenerator(String jndiName, Class type)
+  public JndiValueGenerator(String location, Class<?> type, String jndiName)
   {
+    _location = location;
+    _type = type;
     _jndiName = jndiName;
   }
 
@@ -53,7 +53,7 @@ public class JndiValueGenerator extends ValueGenerator {
     try {
       return new InitialContext().lookup(_jndiName);
     } catch (NamingException e) {
-      throw ConfigException.create(e);
+      throw ConfigException.create(_location, e);
     }
   }
 
