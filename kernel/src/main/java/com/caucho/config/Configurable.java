@@ -51,4 +51,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({TYPE, FIELD, METHOD})
 public @interface Configurable {
+  public String []value() default {};
 }
