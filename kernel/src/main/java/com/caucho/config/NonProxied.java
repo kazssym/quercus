@@ -27,15 +27,23 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.config;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * SimpleBean represents a POJO Java bean registered as a WebBean.
+ * @NonProxied marks a bean as non-proxied, even if the enclosing scope
+ * is a @Normal scope.
  */
-public interface ScopeAdapterBean<X>
-{
-  public X getScopeAdapter(Bean<?> bean, CreationalContext<X> cxt);
+@Documented  
+@Retention(RUNTIME)
+@Target({TYPE, FIELD, METHOD})
+public @interface NonProxied {
 }
