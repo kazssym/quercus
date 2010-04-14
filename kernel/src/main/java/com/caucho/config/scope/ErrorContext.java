@@ -31,54 +31,57 @@ package com.caucho.config.scope;
 
 import java.lang.annotation.Annotation;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
+import javax.enterprise.context.spi.CreationalContext;
 
 import com.caucho.inject.Module;
-import com.caucho.loader.Environment;
-import com.caucho.loader.EnvironmentClassLoader;
 
 /**
- * The application scope value
+ * Context to wrap errors.
  */
 @Module
-public class ApplicationScope extends AbstractScopeContext {
-  private ContextContainer _context = new ContextContainer();
-
-  /**
-   * Returns the current application scope
-   */
-  public ApplicationScope()
+public class ErrorContext implements Context {
+  private RuntimeException _exn;
+  private Context _context;
+  
+  public ErrorContext(RuntimeException exn, Context context)
   {
+    _exn = exn;
+    _context = context;
+  }
+  
+  public RuntimeException getException()
+  {
+    return _exn;
+  }
+  
+  public Context getContext()
+  {
+    return _context;
   }
 
-  /**
-   * Returns true if the scope is currently active.
-   */
   @Override
-  public boolean isActive()
+  public <T> T get(Contextual<T> bean)
   {
-    return true;
-   }
+    return null;
+  }
 
-  /**
-   * Returns the scope annotation type.
-   */
+  @Override
+  public <T> T get(Contextual<T> bean, CreationalContext<T> creationalContext)
+  {
+    return null;
+  }
+
   @Override
   public Class<? extends Annotation> getScope()
   {
-    return ApplicationScoped.class;
+    return null;
   }
 
   @Override
-  protected ContextContainer getContextContainer()
+  public boolean isActive()
   {
-    return _context;
-  }
-
-  @Override
-  protected ContextContainer createContextContainer()
-  {
-    return _context;
+    return false;
   }
 }
