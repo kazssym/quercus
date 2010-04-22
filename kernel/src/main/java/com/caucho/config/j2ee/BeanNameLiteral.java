@@ -27,40 +27,34 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config;
+package com.caucho.config.j2ee;
 
-import javax.inject.Named;
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
- * Utility class for creating @Name annotations, used for generic
- * resources like DataSources.
+ * A @BeanName literal for EJB names
  */
-public class Names extends AnnotationLiteral<Named> implements Named {
-  private final String _name;
-  
-  public Names(String name)
-  {
-    _name = name;
-  }
-  
-  /**
-   * Creates a new @Name annotation with the given value
-   */
-  public static Named create(String value)
-  {
-    return new Names(value);
-  }
 
+public class BeanNameLiteral extends AnnotationLiteral<BeanName> implements BeanName {
+  private String _value;
+  
+  public BeanNameLiteral(String value)
+  {
+    if (value == null)
+      value = "";
+    
+    _value = value;
+  }
+  
   @Override
   public String value()
-  { 
-    return _name;
+  {
+    return _value;
   }
 
   @Override
   public String toString()
   {
-    return "@" + Named.class.getSimpleName() + "('" + _name + "')";
+    return "@BeanName('" + _value + "')";
   }
 }
