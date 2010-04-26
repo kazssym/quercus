@@ -19,7 +19,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Resin Open Source; if not, write to the
- *   Free SoftwareFoundation, Inc.
+ *
+ *   Free Software Foundation, Inc.
  *   59 Temple Place, Suite 330
  *   Boston, MA 02111-1307  USA
  *
@@ -28,51 +29,30 @@
 
 package com.caucho.config.inject;
 
-import java.lang.ref.*;
+import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.ProcessManagedBean;
 
-import com.caucho.config.*;
-import com.caucho.config.inject.AbstractBean;
-import com.caucho.loader.*;
+import com.caucho.inject.Module;
 
-import javax.enterprise.context.spi.CreationalContext;
+@Module
+public class ProcessManagedBeanImpl<X> extends ProcessBeanImpl<X>
+  implements ProcessManagedBean<X>
+{
+  private AnnotatedType<X> _annotatedType;
 
-/**
- * Waits for the close event and calls a destroy() method.
- */
-public class ComponentClose implements ClassLoaderListener {
-  private final WeakReference<Object> _ref;
-  private final AbstractBean _comp;
-
-  public ComponentClose(Object value, AbstractBean comp)
+  protected ProcessManagedBeanImpl(InjectManager manager, 
+                                   Bean<X> bean,
+                                   AnnotatedType<X> annotatedType)
   {
-    _comp = comp;
-    _ref = new WeakReference<Object>(value);
+    super(manager, bean, annotatedType);
+    
+    _annotatedType = annotatedType;
   }
 
-  /**
-   * Handles the case where a class loader is activated.
-   */
-  public void classLoaderInit(DynamicClassLoader loader)
+  @Override
+  public AnnotatedType<X> getAnnotatedBeanClass()
   {
-  }
-  
-  /**
-   * Handles the case where a class loader is dropped.
-   */
-  public void classLoaderDestroy(DynamicClassLoader loader)
-  {
-    Object obj = _ref.get();
-
-    if (obj != null) {
-      CreationalContext env = null;
-      
-      _comp.destroy(obj, env);
-    }
-  }
-
-  public String toString()
-  {
-    return getClass().getSimpleName() + "[" + _comp + "]";
+    return _annotatedType;
   }
 }
-

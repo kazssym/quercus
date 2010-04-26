@@ -29,29 +29,27 @@
 
 package com.caucho.config.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.AnnotatedType;
+
+import com.caucho.inject.Module;
 
 
 /**
  * Abstract introspected view of a Bean
  */
-public class AnnotatedFieldImpl
-  extends AnnotatedElementImpl implements AnnotatedField
+@Module
+public class AnnotatedFieldImpl<X>
+  extends AnnotatedElementImpl implements AnnotatedField<X>
 {
-  private AnnotatedType _declaringType;
+  private AnnotatedType<X> _declaringType;
   
   private Field _field;
   
-  public AnnotatedFieldImpl(AnnotatedType declaringType, Field field)
+  public AnnotatedFieldImpl(AnnotatedType<X> declaringType, Field field)
   {
     super(field.getGenericType(), null, field.getAnnotations());
 
@@ -61,7 +59,7 @@ public class AnnotatedFieldImpl
     introspect(field);
   }
 
-  public AnnotatedType getDeclaringType()
+  public AnnotatedType<X> getDeclaringType()
   {
     return _declaringType;
   }
