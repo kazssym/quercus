@@ -29,47 +29,30 @@
 
 package com.caucho.config.gen;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.enterprise.inject.spi.AnnotatedType;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 
 import com.caucho.inject.Module;
-import com.caucho.java.JavaWriter;
 
 /**
- * Represents a public interface to a bean, e.g. a local stateful view
+ * Aspect factory for generating @Asynchronous aspects.
  */
 @Module
-public class CandiView<X> extends View<X,X> {
-  public CandiView(BeanGenerator<X> bean, AnnotatedType<X> api)
+public class AsynchronousFactory<X>
+  extends AbstractAspectFactory<X>
+{
+  AsynchronousFactory(AspectBeanFactory<X> beanFactory,
+                      AspectFactory<X> next)
   {
-    super(bean, api);
+    super(beanFactory, next);
   }
-
-  @Override
-  public String getViewClassName()
-  {
-    return getBean().getFullClassName();
-  }
-
+  
   /**
-   * Returns the introspected methods
+   * Creates an aspect for interception if the method should be intercepted.
    */
   @Override
-  public ArrayList<AspectGenerator<X>> getMethods()
+  public AspectGenerator<X> create(AnnotatedMethod<? super X> method,
+                                   boolean isEnhanced)
   {
-    CandiBeanGenerator<X> bean = (CandiBeanGenerator<X>) getBean();
-    
-    return bean.getBusinessMethods();
-  }
-
-  /**
-   * Generates the view code.
-   */
-  @Override
-  public void generate(JavaWriter out)
-    throws IOException
-  {
+    return super.create(method, isEnhanced);
   }
 }

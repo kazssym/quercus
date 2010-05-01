@@ -26,50 +26,59 @@
  *
  * @author Scott Ferguson
  */
-
 package com.caucho.config.gen;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
 
 import com.caucho.inject.Module;
-import com.caucho.java.JavaWriter;
 
 /**
- * Represents a public interface to a bean, e.g. a local stateful view
+ * Represents a filter for invoking a method
  */
 @Module
-public class CandiView<X> extends View<X,X> {
-  public CandiView(BeanGenerator<X> bean, AnnotatedType<X> api)
+public class MethodTailFactory<X> implements AspectFactory<X> {
+  private AspectBeanFactory<X> _beanFactory;
+  
+  protected MethodTailFactory(AspectBeanFactory<X> beanFactory)
   {
-    super(bean, api);
+    _beanFactory = beanFactory;
   }
-
-  @Override
-  public String getViewClassName()
-  {
-    return getBean().getFullClassName();
-  }
-
+  
   /**
-   * Returns the introspected methods
+   * Returns the bean factory
    */
   @Override
-  public ArrayList<AspectGenerator<X>> getMethods()
+  public AspectBeanFactory<X> getAspectBeanFactory()
   {
-    CandiBeanGenerator<X> bean = (CandiBeanGenerator<X>) getBean();
-    
-    return bean.getBusinessMethods();
+    return _beanFactory;
   }
-
+  
   /**
-   * Generates the view code.
+   * Returns the owning bean type.
    */
   @Override
-  public void generate(JavaWriter out)
-    throws IOException
+  public AnnotatedType<X> getBeanType()
   {
+    return getAspectBeanFactory().getBeanType();
+  }
+  
+  /**
+   * Returns an aspect for the method if one exists.
+   */
+  @Override
+  public AspectGenerator<X> create(AnnotatedMethod<? super X> method,
+                                   boolean isEnhanced)
+  {
+    if (isEnhanced)
+      return new MethodTailGenerator<X>(method);
+    else
+      return null;
+  }
+  
+  @Override
+  public String toString()
+  {
+    return getClass().getSimpleName() + "[]";
   }
 }
