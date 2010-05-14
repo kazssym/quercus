@@ -29,6 +29,7 @@
 
 package com.caucho.config.gen;
 
+import javax.ejb.Asynchronous;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 
 import com.caucho.inject.Module;
@@ -53,6 +54,14 @@ public class AsynchronousFactory<X>
   public AspectGenerator<X> create(AnnotatedMethod<? super X> method,
                                    boolean isEnhanced)
   {
-    return super.create(method, isEnhanced);
+    if (method.isAnnotationPresent(Asynchronous.class)) {
+      AspectGenerator<X> next = super.create(method, true);
+
+      AspectGenerator<X> head = new AsyncHeadGenerator<X>(this, method, next);
+      
+      return new AsynchronousGenerator<X>(this, method, head);
+    }
+    else
+      return super.create(method, isEnhanced);
   }
 }
