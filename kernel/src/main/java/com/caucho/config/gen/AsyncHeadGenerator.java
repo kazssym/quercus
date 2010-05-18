@@ -74,6 +74,7 @@ public class AsyncHeadGenerator<X> extends AbstractAspectGenerator<X> {
   {
     generateMethodPrologue(out, prologueMap);
     
+    String prefix = "";
     String suffix = "_async";
     
     /*
@@ -94,8 +95,9 @@ public class AsyncHeadGenerator<X> extends AbstractAspectGenerator<X> {
     AspectGeneratorUtil.generateHeader(out, 
                                        isOverride(),
                                        "public", 
-                                       suffix, 
+                                       prefix, 
                                        getJavaMethod(), 
+                                       suffix, 
                                        getThrowsExceptions());
 
     out.println("{");
