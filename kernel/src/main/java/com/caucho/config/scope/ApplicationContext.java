@@ -40,13 +40,13 @@ import com.caucho.loader.Environment;
  * The application scope value
  */
 @Module
-public class ApplicationScope extends AbstractScopeContext {
+public class ApplicationContext extends AbstractScopeContext {
   private ContextContainer _context = new ContextContainer();
 
   /**
    * Returns the current application scope
    */
-  public ApplicationScope()
+  public ApplicationContext()
   {
     Environment.addCloseListener(_context);
   }
