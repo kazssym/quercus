@@ -27,33 +27,65 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.config.extension;
 
+import java.lang.annotation.Annotation;
+import java.util.logging.Level;
+
+import javax.enterprise.context.spi.Context;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.ProcessManagedBean;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.ObserverMethod;
+import javax.enterprise.inject.spi.ProcessBean;
 
+import com.caucho.config.ConfigException;
+import com.caucho.config.inject.InjectManager;
 import com.caucho.inject.Module;
 
 @Module
-public class ProcessManagedBeanImpl<X> extends ProcessBeanImpl<X>
-  implements ProcessManagedBean<X>
+public class AfterBeanDiscoveryImpl implements AfterBeanDiscovery
 {
-  private AnnotatedType<X> _annotatedType;
-
-  protected ProcessManagedBeanImpl(InjectManager manager, 
-                                   Bean<X> bean,
-                                   Annotated annotatedType)
+  private InjectManager _cdiManager;
+ 
+  AfterBeanDiscoveryImpl(InjectManager cdiManager)
   {
-    super(manager, bean, annotatedType);
-    
-    _annotatedType = (AnnotatedType<X>) annotatedType;
+    _cdiManager = cdiManager;
+  }
+  
+  public void addBean(Bean<?> bean)
+  {
+    _cdiManager.addBean(bean);
   }
 
   @Override
-  public AnnotatedType<X> getAnnotatedBeanClass()
+  public void addContext(Context context)
   {
-    return _annotatedType;
+    _cdiManager.addContext(context);
+  }
+
+  @Override
+  public void addObserverMethod(ObserverMethod<?> observerMethod)
+  {
+    _cdiManager.getEventManager().addObserver(observerMethod);
+  }
+
+  @Override
+  public void addDefinitionError(Throwable t)
+  {
+    _cdiManager.addDefinitionError(t);
+  }
+
+  public boolean hasDefinitionError()
+  {
+    return false;
+  }
+
+  @Override
+  public String toString()
+  {
+    return getClass().getSimpleName() + "[" + _cdiManager + "]";
   }
 }

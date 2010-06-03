@@ -27,72 +27,39 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.config.inject;
+package com.caucho.config.extension;
 
-import javax.enterprise.inject.spi.Annotated;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.ProcessBean;
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.ProcessProducerMethod;
 
+import com.caucho.config.inject.InjectManager;
+import com.caucho.config.inject.ProducesMethodBean;
 import com.caucho.inject.Module;
 
 @Module
-public class ProcessBeanImpl<X> implements ProcessBean<X>
+public class ProcessProducerMethodImpl<X,T> extends ProcessBeanImpl<T>
+  implements ProcessProducerMethod<X,T>
 {
-  private InjectManager _manager;
-  private Bean<X> _bean;
-  private Annotated _annotated;
-  private boolean _isVeto;
-
-  public ProcessBeanImpl(InjectManager manager, 
-                         Bean<X> bean,
-                         Annotated annotated)
+  private ProducesMethodBean<X,T> _bean;
+  
+  protected ProcessProducerMethodImpl(InjectManager manager, 
+                                      ProducesMethodBean<X,T> bean)
   {
-    _manager = manager;
-    _bean = bean;
+    super(manager, bean, bean.getAnnotatedType());
     
-    _annotated = annotated;
-  }
-
-  public InjectManager getManager()
-  {
-    return _manager;
-  }
-
-  @Override
-  public Annotated getAnnotated()
-  {
-    return _annotated;
-  }
-
-  @Override
-  public Bean<X> getBean()
-  {
-    return _bean;
-  }
-    
-  public void setBean(Bean<X> bean)
-  {
     _bean = bean;
   }
 
   @Override
-  public void addDefinitionError(Throwable t)
+  public AnnotatedParameter<X> getAnnotatedDisposedParameter()
   {
-  }
-
-  public void veto()
-  {
-    _isVeto = true;
-  }
-
-  public boolean isVeto()
-  {
-    return _isVeto;
+    return (AnnotatedParameter<X>) _bean.getDisposedParameter();
   }
 
   @Override
-  public String toString()
+  public AnnotatedMethod<X> getAnnotatedProducerMethod()
   {
-    return getClass().getSimpleName() + "[" + _bean + "]";
+    return (AnnotatedMethod<X>) _bean.getProducesMethod();
   }
 }
