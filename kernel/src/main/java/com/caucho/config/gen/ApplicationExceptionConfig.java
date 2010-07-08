@@ -30,7 +30,7 @@ package com.caucho.config.gen;
 
 public class ApplicationExceptionConfig {
   private String _id;
-  private String _exceptionClass;
+  private Class<?> _exceptionClass;
   private String _rollback;
   private boolean _inherited;
 
@@ -38,7 +38,7 @@ public class ApplicationExceptionConfig {
   {
   }
 
-  public String getExceptionClass()
+  public Class<?> getExceptionClass()
   {
     return _exceptionClass;
   }
@@ -64,7 +64,7 @@ public class ApplicationExceptionConfig {
     return false;
   }
 
-  public void setExceptionClass(String exceptionClass)
+  public void setExceptionClass(Class<?> exceptionClass)
   {
     _exceptionClass = exceptionClass;
   }
