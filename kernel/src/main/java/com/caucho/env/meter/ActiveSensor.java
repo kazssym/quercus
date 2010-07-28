@@ -26,19 +26,19 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.env.sample;
+package com.caucho.env.meter;
 
 /**
- * SemaphoreSample tracks resource allocations from a pool.
+ * The ActiveSensor measures the number of threads currently using a resource.
  */
-public interface SemaphoreSample {
+public interface ActiveSensor {
   /**
-   * Acquire a resource from the semaphore.
+   * Start the active
    */
-  public void acquire();
-  
+  public void start();
+
   /**
-   * Free a resource
+   * End the active
    */
-  public void release();
+  public void end();
 }

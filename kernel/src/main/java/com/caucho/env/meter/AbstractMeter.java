@@ -26,16 +26,40 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.env.sample;
+package com.caucho.env.meter;
 
-public interface ActiveTimeSample {
+abstract public class AbstractMeter implements Meter {
+  private final String _name;
+
+  protected AbstractMeter(String name)
+  {
+    _name = name;
+  }
+
   /**
-   * Start the active time.
+   * Returns the probe's name.
    */
-  public long start();
+  public final String getName()
+  {
+    return _name;
+  }
   
   /**
-   * End the active time.
+   * Return the probe's next sample.
    */
-  public void end(long startTime);
+  abstract public double sample();
+
+  /**
+   * Returns the current value.
+   */
+  public double peek()
+  {
+    return 0;
+  }
+
+  @Override
+  public String toString()
+  {
+    return getClass().getSimpleName() + "[" + _name + "]";
+  }
 }

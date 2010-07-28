@@ -26,37 +26,19 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.env.sample;
+package com.caucho.env.meter;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-
-public final class TimeProbe extends Probe implements TimeSample {
-  private final AtomicLong _count = new AtomicLong();
-  private final AtomicLong _time = new AtomicLong();
-
-  public TimeProbe(String name)
-  {
-    super(name);
-  }
-
-  public final void add(long time)
-  {
-    _count.incrementAndGet();
-    _time.addAndGet(time);
-  }
+/**
+ * SemaphoreSample tracks resource allocations from a pool.
+ */
+public interface SemaphoreSensor {
+  /**
+   * Acquire a resource from the semaphore.
+   */
+  public void acquire();
   
   /**
-   * Return the probe's next sample.
+   * Free a resource
    */
-  public final double sample()
-  {
-    long count = _count.getAndSet(0);
-    long time = _time.getAndSet(0);
-
-    if (count == 0)
-      return 0;
-    else
-      return time / (double) count;
-  }
+  public void release();
 }
