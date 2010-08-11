@@ -27,40 +27,25 @@
  * @author Scott Ferguson
  */
 
-package com.caucho.util;
+package com.caucho.env.shutdown;
 
-import com.caucho.config.ConfigException;
-
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.LockSupport;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * A generic pool of threads available for Alarms and Work tasks.
+ * The Resin class represents the top-level container for Resin.
+ * It exactly matches the &lt;resin> tag in the resin.xml
  */
-abstract public class Shutdown {
-  private static Shutdown _shutdown;
-
-  protected void setShutdown(Shutdown shutdown)
-  {
-    _shutdown = _shutdown;
-  }
-
-  abstract protected void startShutdown(String msg);
-
-  public static void shutdown(String msg)
-  {
-    Shutdown shutdown = _shutdown;
-
-    if (shutdown != null)
-      shutdown.startShutdown(msg);
-    else {
-      System.err.println(msg);
-      System.exit(1);
-    }
-  }
+public enum ExitCode
+{
+  OK,
+  FAIL_SAFE_HALT,
+  BAD_CONFIG,
+  BIND,
+  MODIFIED,
+  MEMORY,
+  THREAD,
+  ALARM_FREEZE,
+  HEALTH,
+  NETWORK,
+  WATCHDOG_EXIT,
+  CPU;
 }
