@@ -39,7 +39,8 @@ public interface CandiEnhancedBean {
   
   public Object __caucho_getDelegate();
   
-  public void __caucho_postConstruct();
+  public void __caucho_postConstruct()
+    throws Exception;
   
   public void __caucho_destroy(CreationalContextImpl<?> env);
 
