@@ -33,7 +33,7 @@ package com.caucho.quercus.lib.curl;
  * Represents a GET Http request.
  */
 public class HttpGetRequest
-  extends HttpRequest
+  extends CurlHttpRequest
 {
   public HttpGetRequest(CurlResource curlResource)
   {
