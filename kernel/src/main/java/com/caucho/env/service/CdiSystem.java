@@ -31,31 +31,31 @@ package com.caucho.env.service;
 
 import com.caucho.config.inject.InjectManager;
 
-public class CdiService extends AbstractResinService 
+public class CdiSystem extends AbstractResinSubSystem 
 {
   public static final int START_PRIORITY = 1;
   
   private InjectManager _cdiManager;
   
-  private CdiService()
+  private CdiSystem()
   {
     ResinSystem system = ResinSystem.getCurrent();
     _cdiManager = InjectManager.create(system.getClassLoader());
   }
 
-  public static CdiService createAndAddService()
+  public static CdiSystem createAndAddService()
   {
-    ResinSystem system = preCreate(CdiService.class);
+    ResinSystem system = preCreate(CdiSystem.class);
       
-    CdiService service = new CdiService();
-    system.addService(CdiService.class, service);
+    CdiSystem service = new CdiSystem();
+    system.addService(CdiSystem.class, service);
     
     return service;
   }
 
-  public static CdiService getCurrent()
+  public static CdiSystem getCurrent()
   {
-    return ResinSystem.getCurrentService(CdiService.class);
+    return ResinSystem.getCurrentService(CdiSystem.class);
   }
   
   @Override
