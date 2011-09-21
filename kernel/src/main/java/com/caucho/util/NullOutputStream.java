@@ -34,27 +34,34 @@ import java.io.OutputStream;
 /**
  * An OutputStream that writes to nothing.
  */
-public class NullOutputStream extends OutputStream {
+public final class NullOutputStream extends OutputStream {
+  public static final NullOutputStream NULL = new NullOutputStream();
+  
+  @Override
   public void write(int b)
     throws IOException
   {
   }
 
+  @Override
   public void write(byte[] buffer)
     throws IOException
   {
   }
 
+  @Override
   public void write(byte[] buffer, int offset, int length)
     throws IOException
   {
   }
 
+  @Override
   public void flush()
     throws IOException
   {
   }
 
+  @Override
   public void close()
     throws IOException
   {
