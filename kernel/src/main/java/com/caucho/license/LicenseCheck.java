@@ -44,5 +44,8 @@ public interface LicenseCheck
 
   public String getDescription()
     throws ConfigException, IOException;
+  
+  public String getLicenseDirectory()
+    throws ConfigException, IOException;
 }
 
