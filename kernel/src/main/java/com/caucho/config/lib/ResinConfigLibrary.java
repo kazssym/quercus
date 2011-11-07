@@ -29,16 +29,18 @@
 
 package com.caucho.config.lib;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import com.caucho.config.Config;
-import com.caucho.config.inject.BeanBuilder;
 import com.caucho.config.inject.InjectManager;
 import com.caucho.jmx.Jmx;
 import com.caucho.naming.Jndi;
-
-import java.lang.reflect.*;
-import java.util.logging.*;
-
-import javax.management.*;
 
 /**
  * Library of static config functions.
@@ -52,7 +54,7 @@ public class ResinConfigLibrary {
       Thread thread = Thread.currentThread();
       ClassLoader loader = thread.getContextClassLoader();
       
-      Class cl = Class.forName(className, false, loader);
+      Class<?> cl = Class.forName(className, false, loader);
 
       return cl != null;
     } catch (Throwable e) {
