@@ -29,43 +29,26 @@
 
 package com.caucho.env.thread;
 
-import com.caucho.env.thread2.AbstractTaskWorker2;
-
 /**
- * A generic pool of threads available for Alarms and Work tasks.
+ * Item for the disruptor.
  */
-abstract public class AbstractTaskWorker 
-  extends AbstractTaskWorker2
-  implements TaskWorker {
-  private ThreadPool _threadPool;
+public class DisruptorItem
+{
+  private final int _index;
   
-  protected AbstractTaskWorker()
+  protected DisruptorItem(int index)
   {
-    this(ThreadPool.getCurrent());
+    _index = index;
   }
-
-  protected AbstractTaskWorker(ThreadPool threadPool)
+  
+  public int getIndex()
   {
-    this(Thread.currentThread().getContextClassLoader(), threadPool);
-  }
-
-  protected AbstractTaskWorker(ClassLoader classLoader,
-                               ThreadPool threadPool)
-  {
-    super(classLoader);
-    
-    _threadPool = threadPool;
+    return _index;
   }
 
   @Override
-  protected void startWorkerThread()
+  public String toString()
   {
-    _threadPool.schedulePriority(this);
-  }
-
-  @Override
-  protected void unpark(Thread thread)
-  {
-    _threadPool.scheduleUnpark(thread);
+    return getClass().getSimpleName() + "[]";
   }
 }
