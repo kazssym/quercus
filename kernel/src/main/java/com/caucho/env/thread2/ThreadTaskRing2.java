@@ -29,13 +29,6 @@
 
 package com.caucho.env.thread2;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.caucho.env.thread.ThreadPool;
 import com.caucho.util.RingItemFactory;
 import com.caucho.util.RingQueue;
 
