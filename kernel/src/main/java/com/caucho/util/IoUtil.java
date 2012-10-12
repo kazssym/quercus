@@ -38,6 +38,24 @@ import java.io.*;
 public class IoUtil {
   private static final Logger log
     = Logger.getLogger(IoUtil.class.getName());
+  
+  public static int readInt(InputStream is)
+    throws IOException
+  {
+    return ((is.read() << 24)
+        + (is.read() << 16)
+        + (is.read() << 8)
+        + is.read());
+  }
+  
+  public static void writeInt(OutputStream os, int v)
+    throws IOException
+  {
+    os.write(v >> 24);
+    os.write(v >> 16);
+    os.write(v >> 8);
+    os.write(v);
+  }
 
   public static void close(InputStream is)
   {
