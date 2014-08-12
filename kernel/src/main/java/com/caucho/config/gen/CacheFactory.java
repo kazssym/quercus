@@ -30,16 +30,10 @@
 package com.caucho.config.gen;
 
 import javax.cache.annotation.CachePut;
+import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
-import javax.cache.annotation.CacheRemoveEntry;
 import javax.cache.annotation.CacheResult;
-import javax.ejb.Remove;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedType;
 
 import com.caucho.inject.Module;
 
@@ -65,7 +59,7 @@ public class CacheFactory<X>
   {
     CacheResult cacheResult = method.getAnnotation(CacheResult.class);
     CachePut cachePut = method.getAnnotation(CachePut.class);
-    CacheRemoveEntry cacheRemove = method.getAnnotation(CacheRemoveEntry.class);
+    CacheRemove cacheRemove = method.getAnnotation(CacheRemove.class);
     CacheRemoveAll cacheRemoveAll = method.getAnnotation(CacheRemoveAll.class);
     
     if (cacheResult != null

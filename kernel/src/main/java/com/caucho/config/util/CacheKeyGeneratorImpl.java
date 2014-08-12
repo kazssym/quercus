@@ -40,15 +40,15 @@ import javax.cache.annotation.CacheInvocationParameter;
 import javax.cache.annotation.CacheKey;
 import javax.cache.annotation.CacheKeyGenerator;
 import javax.cache.annotation.CacheKeyInvocationContext;
-import javax.cache.annotation.CacheKeyParam;
 import javax.cache.annotation.CacheMethodDetails;
 import javax.cache.annotation.CachePut;
+import javax.cache.annotation.CacheRemove;
 import javax.cache.annotation.CacheRemoveAll;
-import javax.cache.annotation.CacheRemoveEntry;
 import javax.cache.annotation.CacheResolver;
 import javax.cache.annotation.CacheResolverFactory;
 import javax.cache.annotation.CacheResult;
 import javax.cache.annotation.CacheValue;
+import javax.cache.annotation.GeneratedCacheKey;
 
 /**
  * Key for a cacheable method.
@@ -90,8 +90,8 @@ public class CacheKeyGeneratorImpl {
       _cacheAnnotation = _method.getAnnotation(CacheResult.class);
     else if (_method.isAnnotationPresent(CachePut.class))
       _cacheAnnotation = _method.getAnnotation(CachePut.class);
-    else if (_method.isAnnotationPresent(CacheRemoveEntry.class))
-      _cacheAnnotation = _method.getAnnotation(CacheRemoveEntry.class);
+    else if (_method.isAnnotationPresent(CacheRemove.class))
+      _cacheAnnotation = _method.getAnnotation(CacheRemove.class);
     else if (_method.isAnnotationPresent(CacheRemoveAll.class))
       _cacheAnnotation = _method.getAnnotation(CacheRemoveAll.class);
     
@@ -120,7 +120,7 @@ public class CacheKeyGeneratorImpl {
             _valueParam = i;
         }
         
-        if (isAnnotationPresent(CacheKeyParam.class, paramAnn[i])) {
+        if (isAnnotationPresent(CacheKey.class, paramAnn[i])) {
           if (! isKeyParam) {
             isKeyParam = true;
             keyParameters.clear();
@@ -162,7 +162,7 @@ public class CacheKeyGeneratorImpl {
     return false;
   }
   
-  public CacheKey generateKey(Object target, Object...args)
+  public GeneratedCacheKey generateKey(Object target, Object...args)
   {
     if (_keyGenerator != null)
       return _keyGenerator.generateCacheKey(new KeyContext(target, args));

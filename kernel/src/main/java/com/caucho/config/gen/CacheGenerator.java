@@ -28,25 +28,6 @@
  */
 package com.caucho.config.gen;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.cache.Cache;
-import javax.cache.annotation.CacheDefaults;
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheKeyGenerator;
-import javax.cache.annotation.CacheKeyParam;
-import javax.cache.annotation.CachePut;
-import javax.cache.annotation.CacheRemoveAll;
-import javax.cache.annotation.CacheRemoveEntry;
-import javax.cache.annotation.CacheResolverFactory;
-import javax.cache.annotation.CacheResult;
-import javax.cache.annotation.CacheValue;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedParameter;
-
 import com.caucho.config.ConfigException;
 import com.caucho.config.util.CacheKeyGeneratorImpl;
 import com.caucho.config.util.CacheKeyImpl;
@@ -54,6 +35,23 @@ import com.caucho.config.util.CacheUtil;
 import com.caucho.inject.Module;
 import com.caucho.java.JavaWriter;
 import com.caucho.util.L10N;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import javax.cache.Cache;
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheKeyGenerator;
+import javax.cache.annotation.CachePut;
+import javax.cache.annotation.CacheRemove;
+import javax.cache.annotation.CacheRemoveAll;
+import javax.cache.annotation.CacheResolverFactory;
+import javax.cache.annotation.CacheResult;
+import javax.cache.annotation.CacheValue;
+import javax.cache.annotation.GeneratedCacheKey;
+import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 
 /**
  * Represents the caching interception
@@ -64,7 +62,7 @@ public class CacheGenerator<X> extends AbstractAspectGenerator<X> {
   
   private CacheResult _cacheResult;
   private CachePut _cachePut;
-  private CacheRemoveEntry _cacheRemove;
+  private CacheRemove _cacheRemove;
   private CacheRemoveAll _cacheRemoveAll;
   
   private Class<?> _keyGenerator = CacheKeyGenerator.class;
@@ -79,7 +77,7 @@ public class CacheGenerator<X> extends AbstractAspectGenerator<X> {
                         AspectGenerator<X> next,
                         CacheResult cacheResult,
                         CachePut cachePut,
-                        CacheRemoveEntry cacheRemove,
+                        CacheRemove cacheRemove,
                         CacheRemoveAll cacheRemoveAll)
   {
     super(factory, method, next);
@@ -326,7 +324,7 @@ public class CacheGenerator<X> extends AbstractAspectGenerator<X> {
     throws IOException
   {
     out.println();
-    out.println(CacheKey.class.getName() + " candiCacheKey");
+    out.println(GeneratedCacheKey.class.getName() + " candiCacheKey");
     
     if (_keyGenInstance != null) {
       out.print(" = " + _keyGenInstance + ".generateKey(");
@@ -357,7 +355,7 @@ public class CacheGenerator<X> extends AbstractAspectGenerator<X> {
         if (param.isAnnotationPresent(CacheValue.class))
           continue;
       
-        if (isCacheKeyParam && ! param.isAnnotationPresent(CacheKeyParam.class))
+        if (isCacheKeyParam && ! param.isAnnotationPresent(CacheKey.class))
           continue;
       
         if (! isFirst)
@@ -381,7 +379,7 @@ public class CacheGenerator<X> extends AbstractAspectGenerator<X> {
   private boolean isCacheKeyParam(List<AnnotatedParameter<?>> params)
   {
     for (AnnotatedParameter<?> param : params) {
-      if (param.isAnnotationPresent(CacheKeyParam.class)) {
+      if (param.isAnnotationPresent(CacheKey.class)) {
         return true;
       }
     }

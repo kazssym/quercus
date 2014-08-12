@@ -30,13 +30,13 @@ package com.caucho.config.util;
 
 import java.io.Serializable;
 
-import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.GeneratedCacheKey;
 
 /**
  * Key for a cacheable method.
  */
 @SuppressWarnings("serial")
-public class CacheKeyImpl implements Serializable, CacheKey {
+public class CacheKeyImpl implements Serializable, GeneratedCacheKey {
   private Object []_key;
   
   public CacheKeyImpl(Object ...key)
