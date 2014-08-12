@@ -191,7 +191,6 @@ public class RotateLog {
    */
   @PostConstruct
   public void init()
-    throws ConfigException, IOException
   {
     if (_path != null)
       _rotateStream = RotateStream.create(_path);
@@ -218,6 +217,10 @@ public class RotateLog {
     if (_archiveFormat != null)
       rolloverLog.setArchiveFormat(_archiveFormat);
 
-    _rotateStream.init();
+    try {
+      _rotateStream.init();
+    } catch (IOException t) {
+      throw new RuntimeException(t);
+    }
   }
 }

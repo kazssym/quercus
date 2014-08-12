@@ -33,13 +33,14 @@ import com.caucho.config.program.ContainerProgram;
 import com.caucho.naming.Jndi;
 import com.caucho.util.L10N;
 
-import javax.annotation.PostConstruct;
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
-import javax.naming.spi.ObjectFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.annotation.PostConstruct;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+import javax.naming.spi.ObjectFactory;
 
 /**
  * Configuration for the init-param pattern.
@@ -120,7 +121,6 @@ public class ReferenceConfig {
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     Object obj = null;
     
@@ -155,10 +155,14 @@ public class ReferenceConfig {
       throw new ConfigException(L.l("`{0}' must implement ObjectFactory.  <factory> classes in <resource> must implement ObjectFactory.", _factory.getName()));
     }
 
-    if (_name.startsWith("java:comp"))
-      Jndi.bindDeep(_name, obj);
-    else
-      Jndi.bindDeep("java:comp/env/" + _name, obj);
+    try {
+      if (_name.startsWith("java:comp"))
+        Jndi.bindDeep(_name, obj);
+      else
+        Jndi.bindDeep("java:comp/env/" + _name, obj);
+    } catch (NamingException t) {
+      throw new RuntimeException(t);
+    }
   }
 
   protected void configure(Object obj)

@@ -69,7 +69,6 @@ public class StderrLog extends RotateLog {
    */
   @PostConstruct
   public void init()
-    throws ConfigException, IOException
   {
     super.init();
 

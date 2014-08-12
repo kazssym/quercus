@@ -116,7 +116,6 @@ public class MessageDestinationRef
 
   @PostConstruct
   public void init()
-    throws NamingException
   {
     boolean bind = false;
 
@@ -143,8 +142,12 @@ public class MessageDestinationRef
         bind = true;
     }
 
-    if (bind) {
-      Jndi.rebindDeep(fullRefName, this);
+    try {
+      if (bind) {
+        Jndi.rebindDeep(fullRefName, this);
+      }
+    } catch (NamingException t) {
+      throw new RuntimeException(t);
     }
 
     if (log.isLoggable(Level.FINER))

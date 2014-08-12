@@ -147,7 +147,6 @@ abstract public class ResourceGroupConfig extends ConfigProgram
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (! isProgram())
       deploy();

@@ -37,9 +37,10 @@ import com.caucho.naming.Jndi;
 import com.caucho.naming.LinkProxy;
 import com.caucho.util.L10N;
 
-import javax.annotation.PostConstruct;
-import javax.naming.spi.InitialContextFactory;
 import java.util.Hashtable;
+import javax.annotation.PostConstruct;
+import javax.naming.NamingException;
+import javax.naming.spi.InitialContextFactory;
 
 /**
  * Configuration for the init-param pattern.
@@ -108,7 +109,6 @@ public class JndiLink {
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_name == null)
       throw new ConfigException(L.l("<jndi-link> configuration needs a <name>.  The <name> is the JNDI name where the context will be linked."));
@@ -118,7 +118,12 @@ public class JndiLink {
     if (factory == null)
       throw new ConfigException(L.l("<jndi-link> configuration need a <factory>.  The <factory> is the class name of the InitialContextFactory bean."));
 
-    Object obj = factory.newInstance();
+    Object obj;
+    try {
+      obj = factory.newInstance();
+    } catch (ReflectiveOperationException t) {
+      throw new RuntimeException(t);
+    }
 
     /*
     configure(obj);
@@ -138,14 +143,18 @@ public class JndiLink {
       Environment.addEnvironmentListener(listener);
     }
 
-    Object proxy = new LinkProxy((InitialContextFactory) obj,
-                                 _properties,
-                                 null);
+    try {
+      Object proxy = new LinkProxy((InitialContextFactory) obj,
+                                   _properties,
+                                   null);
 
-    if (_name.startsWith("java:comp"))
-      Jndi.bindDeep(_name, proxy);
-    else {
-      Jndi.bindDeep("java:comp/env/" + _name, proxy);
+      if (_name.startsWith("java:comp"))
+        Jndi.bindDeep(_name, proxy);
+      else {
+        Jndi.bindDeep("java:comp/env/" + _name, proxy);
+      }
+    } catch (NamingException t) {
+      throw new RuntimeException(t);
     }
   }
 

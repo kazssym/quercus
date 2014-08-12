@@ -146,7 +146,6 @@ public class PersistenceUnitRef implements ObjectProxy {
 
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_persistenceUnitRefName == null)
       return;

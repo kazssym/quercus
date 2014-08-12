@@ -41,9 +41,9 @@ import com.caucho.vfs.WriteStream;
  */
 public class StdoutLog extends RotateLog {
   private boolean _isSkipInit;
-  
+
   private String _timestamp;
-  
+
   /**
    * Creates the StdoutLog
    */
@@ -52,7 +52,7 @@ public class StdoutLog extends RotateLog {
     this(false);
     // setTimestamp("[%Y/%m/%d %H:%M:%S.%s] ");
   }
-  
+
   public StdoutLog(boolean isSkipInit)
   {
     _isSkipInit = isSkipInit;
@@ -73,21 +73,24 @@ public class StdoutLog extends RotateLog {
   {
     _timestamp = timestamp;
   }
-  
+
   /**
    * Initialize the log.
    */
   @PostConstruct
   public void init()
-      throws ConfigException, IOException
   {
     super.init();
-    
-    if (! _isSkipInit) {
-      initImpl();
+
+    try {
+      if (! _isSkipInit) {
+        initImpl();
+      }
+    } catch (IOException t) {
+      throw new RuntimeException(t);
     }
   }
-  
+
   public void initImpl()
     throws ConfigException, IOException
   {

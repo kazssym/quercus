@@ -209,7 +209,6 @@ public class LinkProxy implements ObjectProxy, java.io.Serializable {
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_jndiName == null && _jndiLocalName == null)
       throw new ConfigException(L.l("<jndi-link> configuration needs a <jndi-name>.  The <jndi-name> is the JNDI name where the context will be linked."));
@@ -236,12 +235,16 @@ public class LinkProxy implements ObjectProxy, java.io.Serializable {
         && Jndi.getFullName(_jndiName).equals(Jndi.getFullName(_foreignName)))
       return;
 
-    // server/155a - not a short link since it needs to be able to bind
-    // the jndi root
-    if (_jndiLocalName != null)
-      Jndi.rebindDeep(_jndiLocalName, this);
-    else
-      Jndi.rebindDeepShort(_jndiName, this);
+    try {
+      // server/155a - not a short link since it needs to be able to bind
+      // the jndi root
+      if (_jndiLocalName != null)
+        Jndi.rebindDeep(_jndiLocalName, this);
+      else
+        Jndi.rebindDeepShort(_jndiName, this);
+    } catch (NamingException t) {
+      throw new RuntimeException(t);
+    }
   }
 
   public String toString()

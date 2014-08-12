@@ -171,7 +171,6 @@ public class DataSourceRef extends ResourceGroupConfig {
   // XXX: ejb/0fd0 vs ejb/0g03
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_name == null)
       throw new ConfigException(L.l("data-sourceneeds 'name' attribute"));

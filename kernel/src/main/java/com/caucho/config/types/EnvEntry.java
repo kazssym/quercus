@@ -124,7 +124,6 @@ public class EnvEntry extends ResourceGroupConfig implements Validator {
   // XXX: ejb/0fd0 vs ejb/0g03
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_name == null)
       throw new ConfigException(L.l("env-entry needs 'env-entry-name' attribute"));

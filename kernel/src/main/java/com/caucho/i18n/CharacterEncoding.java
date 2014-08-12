@@ -72,7 +72,6 @@ public class CharacterEncoding {
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_encoding == null)
       throw new ConfigException(L.l("character-encoding requires a 'value' attribute with the character encoding."));

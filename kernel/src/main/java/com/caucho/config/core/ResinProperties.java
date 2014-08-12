@@ -113,7 +113,6 @@ public class ResinProperties extends ResinControl implements FlowBean
 
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_path == null) {
       if (_fileSet == null)

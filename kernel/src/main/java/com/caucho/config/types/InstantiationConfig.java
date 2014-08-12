@@ -79,12 +79,15 @@ public class InstantiationConfig {
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_value == null)
       throw new ConfigException(L.l("An instantiation requires the class name."));
 
-    parseSignature();
+    try {
+      parseSignature();
+    } catch (Exception t) {
+      throw new RuntimeException(t);
+    }
   }
 
   /**

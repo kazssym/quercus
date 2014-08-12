@@ -42,7 +42,7 @@ import com.caucho.config.type.FlowBean;
 public class ResinChoose extends ResinControl implements FlowBean {
   private ArrayList<ResinWhen> _whenList = new ArrayList<ResinWhen>();
   private ResinWhen _otherwise;
-  
+
   /**
    * Adds a new when clause.
    */
@@ -50,7 +50,7 @@ public class ResinChoose extends ResinControl implements FlowBean {
   {
     _whenList.add(when);
   }
-  
+
   /**
    * Adds the otherwise clause.
    */
@@ -62,22 +62,25 @@ public class ResinChoose extends ResinControl implements FlowBean {
 
   @PostConstruct
   public void init()
-    throws Throwable
   {
     Object object = getObject();
-    
+
     if (object == null)
       return;
-    
-    for (int i = 0; i < _whenList.size(); i++) {
-      ResinWhen when = _whenList.get(i);
 
-      if (when.configure(object))
-        return;
+    try {
+      for (int i = 0; i < _whenList.size(); i++) {
+        ResinWhen when = _whenList.get(i);
+
+        if (when.configure(object))
+          return;
+      }
+
+      if (_otherwise != null)
+        _otherwise.configure(object);
+    } catch (Throwable t) {
+        throw new RuntimeException(t);
     }
-
-    if (_otherwise != null)
-      _otherwise.configure(object);
   }
 }
 

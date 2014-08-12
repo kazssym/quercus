@@ -63,7 +63,6 @@ public class ResinIf extends ResinControl implements FlowBean {
 
   @PostConstruct
   public void init()
-    throws Throwable
   {
     Object object = getObject();
     

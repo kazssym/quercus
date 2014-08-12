@@ -101,12 +101,11 @@ public class ResinImport extends ResinControl implements FlowBean
 
   @PostConstruct
   public void init()
-    throws Exception
   {
     try {
       initImpl();
     } catch (Exception e) {
-      throw e;
+      throw new RuntimeException(e);
     }
   }
   

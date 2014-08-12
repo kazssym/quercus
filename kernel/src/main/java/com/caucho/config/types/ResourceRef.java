@@ -204,7 +204,6 @@ public class ResourceRef extends ResourceGroupConfig
    */
   @PostConstruct
   public void init()
-    throws Exception
   {
     super.init();
     

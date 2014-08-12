@@ -29,12 +29,12 @@
 
 package com.caucho.config.core;
 
-import javax.annotation.PostConstruct;
-
 import com.caucho.config.Config;
 import com.caucho.config.type.EnvBean;
 import com.caucho.config.type.FlowBean;
 import com.caucho.naming.Jndi;
+import javax.annotation.PostConstruct;
+import javax.naming.NamingException;
 
 /**
  * Sets an EL value.
@@ -96,10 +96,13 @@ public class ResinSet implements EnvBean, FlowBean {
 
   @PostConstruct
   public void init()
-    throws Exception
   {
-    if (_jndiName != null)
-      Jndi.rebindDeepShort(_jndiName, _value);
+    try {
+      if (_jndiName != null)
+        Jndi.rebindDeepShort(_jndiName, _value);
+    } catch (NamingException t) {
+      throw new RuntimeException(t);
+    }
     
     if (_var != null) {
       // InjectManager webBeans = InjectManager.create();

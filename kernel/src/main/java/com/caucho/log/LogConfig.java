@@ -38,13 +38,14 @@ import com.caucho.management.server.*;
 import com.caucho.util.L10N;
 import com.caucho.vfs.WriteStream;
 
-import javax.annotation.PostConstruct;
-import javax.management.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
+import javax.management.*;
 
 /**
  * Environment-specific configuration.
@@ -243,10 +244,13 @@ public class LogConfig extends RotateLog {
    */
   @PostConstruct
   public void init()
-    throws ConfigException, java.io.IOException
   {
-    if (! _isSkipInit)
-      initImpl();
+    try {
+      if (! _isSkipInit)
+        initImpl();
+    } catch (IOException t) {
+      throw new RuntimeException(t);
+    }
   }
   
   /**
