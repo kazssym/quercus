@@ -28,17 +28,10 @@
  */
 package com.caucho.config.util;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Set;
-
 import javax.cache.Cache;
-import javax.cache.CacheBuilder;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
-import javax.cache.MutableConfiguration;
-import javax.cache.annotation.CacheInvocationParameter;
-import javax.cache.annotation.CacheKeyInvocationContext;
+import javax.cache.configuration.MutableConfiguration;
 
 /**
  * Utilities to manage caching.
@@ -46,14 +39,14 @@ import javax.cache.annotation.CacheKeyInvocationContext;
 public class CacheUtil {
   public static <K,V> Cache<K,V> getCache(String name)
   {
-    CacheManager manager = Caching.getCacheManager();
+    CacheManager manager = Caching.getCachingProvider().getCacheManager();
     
     Cache<?,?> cache = manager.getCache(name);
     
     if (cache == null) {
       MutableConfiguration<K,V> cfg = new MutableConfiguration<K,V>();
     
-      cache = manager.configureCache(name,  cfg);
+      cache = manager.createCache(name, cfg);
     }
     
     return (Cache) cache;
