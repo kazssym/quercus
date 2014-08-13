@@ -79,7 +79,7 @@ public class ResinChoose extends ResinControl implements FlowBean {
       if (_otherwise != null)
         _otherwise.configure(object);
     } catch (Throwable t) {
-        throw new RuntimeException(t);
+      throw new RuntimeException(t);
     }
   }
 }
