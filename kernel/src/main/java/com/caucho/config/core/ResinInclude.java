@@ -87,7 +87,6 @@ public class ResinInclude extends ResinControl {
 
   @PostConstruct
   public void init()
-    throws Exception
   {
     if (_path == null)
       throw new ConfigException(L.l("'href' attribute missing from resin:include."));
@@ -106,9 +105,13 @@ public class ResinInclude extends ResinControl {
 
     LooseXml xml = new LooseXml();
 
-    Document doc = xml.parseDocument(_path);
+    try {
+      Document doc = xml.parseDocument(_path);
 
-    new Config().configure(object, doc); // , schema);
+      new Config().configure(object, doc); // , schema);
+    } catch (Exception t) {
+      throw new RuntimeException(t);
+    }
   }
 }
 
