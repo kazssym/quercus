@@ -35,7 +35,8 @@ import com.caucho.util.L10N;
 import com.caucho.vfs.*;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.*;
 
 /**
