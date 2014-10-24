@@ -29,6 +29,8 @@
 
 package com.caucho.config.reflect;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -70,13 +72,13 @@ public class VarType<D extends GenericDeclaration> extends BaseType
     // ioc/024j vs ioc/024k
     return false;
   }
-  
+
   @Override
   public boolean isGeneric()
   {
     return true;
   }
-  
+
   @Override
   public boolean isVariable()
   {
@@ -94,13 +96,39 @@ public class VarType<D extends GenericDeclaration> extends BaseType
 
     return bounds;
   }
-  
+
+  @Override
+  public AnnotatedType[] getAnnotatedBounds() {
+    AnnotatedType []bounds = new AnnotatedType[_bounds.length];
+
+    for (int i = 0; i < bounds.length; i++) {
+      bounds[i] = new AnnotatedTypeImpl(_bounds[i].toType());
+    }
+
+    return bounds;
+  }
+
+  @Override
+  public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+    return null;
+  }
+
+  @Override
+  public Annotation[] getAnnotations() {
+    return new Annotation[0];
+  }
+
+  @Override
+  public Annotation[] getDeclaredAnnotations() {
+    return new Annotation[0];
+  }
+
   @Override
   protected BaseType []getWildcardBounds()
   {
     return _bounds;
   }
-  
+
   @Override
   public Class<?> getRawClass()
   {
@@ -123,16 +151,16 @@ public class VarType<D extends GenericDeclaration> extends BaseType
   {
     if (type.isWildcard())
       return true;
-    
+
     for (BaseType bound : _bounds) {
       if (! bound.isAssignableFrom(type)) {
         return false;
       }
     }
-    
+
     return true;
   }
-  
+
   @Override
   public boolean isParamAssignableFrom(BaseType type)
   {
@@ -170,23 +198,65 @@ public class VarType<D extends GenericDeclaration> extends BaseType
   {
     if (_bounds.length == 0)
       return _name;
-    
+
     StringBuilder sb = new StringBuilder(_name);
-    
+
     for (BaseType type : _bounds) {
       if (! type.getRawClass().equals(Object.class))
         sb.append(" extends ").append(type);
     }
-    
+
     return sb.toString();
   }
-  
+
   static class GenericDeclarationImpl implements GenericDeclaration {
     @Override
     public TypeVariable<?>[] getTypeParameters()
     {
       return null;
     }
-    
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+      return null;
+    }
+
+    @Override
+    public Annotation[] getAnnotations() {
+      return new Annotation[0];
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations() {
+      return new Annotation[0];
+    }
+  }
+
+  static class AnnotatedTypeImpl implements AnnotatedType {
+    private Type _type;
+
+    public AnnotatedTypeImpl(Type type) {
+      _type = type;
+    }
+
+    @Override
+    public Type getType() {
+      return _type;
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+      return null;
+    }
+
+    @Override
+    public Annotation[] getAnnotations() {
+      return new Annotation[0];
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations() {
+      return new Annotation[0];
+    }
   }
 }
