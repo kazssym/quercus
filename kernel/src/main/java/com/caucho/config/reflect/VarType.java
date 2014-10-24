@@ -30,7 +30,6 @@
 package com.caucho.config.reflect;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -43,7 +42,7 @@ import com.caucho.inject.Module;
  */
 @Module
 public class VarType<D extends GenericDeclaration> extends BaseType
-  implements TypeVariable<D>
+  implements UnannotatedTypeVariable<D>
 {
   private String _name;
   private BaseType []_bounds;
@@ -95,32 +94,6 @@ public class VarType<D extends GenericDeclaration> extends BaseType
     }
 
     return bounds;
-  }
-
-  @Override
-  public AnnotatedType[] getAnnotatedBounds() {
-    AnnotatedType []bounds = new AnnotatedType[_bounds.length];
-
-    for (int i = 0; i < bounds.length; i++) {
-      bounds[i] = new AnnotatedTypeImpl(_bounds[i].toType());
-    }
-
-    return bounds;
-  }
-
-  @Override
-  public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-    return null;
-  }
-
-  @Override
-  public Annotation[] getAnnotations() {
-    return new Annotation[0];
-  }
-
-  @Override
-  public Annotation[] getDeclaredAnnotations() {
-    return new Annotation[0];
   }
 
   @Override
@@ -185,7 +158,7 @@ public class VarType<D extends GenericDeclaration> extends BaseType
   {
     if (o == this)
       return true;
-    else if (o instanceof TypeVariable<?>) {
+    else if (o instanceof UnannotatedTypeVariable<?>) {
       // TypeVariable<?> var = (TypeVariable<?>) o;
 
       return true;
@@ -216,45 +189,14 @@ public class VarType<D extends GenericDeclaration> extends BaseType
       return null;
     }
 
-    @Override
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
       return null;
     }
 
-    @Override
     public Annotation[] getAnnotations() {
       return new Annotation[0];
     }
 
-    @Override
-    public Annotation[] getDeclaredAnnotations() {
-      return new Annotation[0];
-    }
-  }
-
-  static class AnnotatedTypeImpl implements AnnotatedType {
-    private Type _type;
-
-    public AnnotatedTypeImpl(Type type) {
-      _type = type;
-    }
-
-    @Override
-    public Type getType() {
-      return _type;
-    }
-
-    @Override
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-      return null;
-    }
-
-    @Override
-    public Annotation[] getAnnotations() {
-      return new Annotation[0];
-    }
-
-    @Override
     public Annotation[] getDeclaredAnnotations() {
       return new Annotation[0];
     }

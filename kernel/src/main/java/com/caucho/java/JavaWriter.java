@@ -39,6 +39,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 
 import com.caucho.bytecode.JClass;
+import com.caucho.config.reflect.UnannotatedTypeVariable;
 import com.caucho.vfs.Path;
 import com.caucho.vfs.WriteStream;
 
@@ -549,7 +550,7 @@ public class JavaWriter extends Writer {
     }
   }
 
-  public void printVarType(TypeVariable<?> typeVariable)
+  public void printVarType(UnannotatedTypeVariable<?> typeVariable)
     throws IOException
   {
     print(typeVariable.getName());
