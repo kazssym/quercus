@@ -109,7 +109,7 @@ public class FromPreviousSibling extends Axis {
    *
    * @return the next node
    */
-  public Node nextNode(Node node, Node lastNOde)
+  public Node nextNode(Node node, Node lastNode)
   {
     return node.getPreviousSibling();
   }

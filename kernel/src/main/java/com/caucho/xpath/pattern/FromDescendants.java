@@ -216,7 +216,7 @@ public class FromDescendants extends Axis {
    * Returns the next node in the selection order.
    *
    * @param node the current node
-   * @param ndoe the last node
+   * @param lastNode the last node
    *
    * @return the next node
    */

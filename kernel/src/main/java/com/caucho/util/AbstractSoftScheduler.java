@@ -37,7 +37,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 /**
- * Provides an implementation of the {@linkTimeIntervalMap}
+ * Provides an implementation of the {@link TimeIntervalScheduler}
  * for managing schedules based on soft or weak references to the
  * entries in the schedule.
  *

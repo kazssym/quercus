@@ -50,7 +50,6 @@ public class AttributeIterator extends AxisIterator {
    * @param axis the owning axis
    * @param node the first node
    * @param env the xpath environment
-   * @param context the context node
    * @param match the node matching pattern
    */
   public AttributeIterator(NodeIterator parentIter, AbstractPattern axis,

@@ -37,10 +37,10 @@ import java.lang.annotation.Target;
 /**
  * Mark a method such that if execution of the method returns null,
  * the value returned to the Quercus caller is instead
- * {@link com.caucho.quercus.env.BooleanValue.FALSE}.
+ * {@link com.caucho.quercus.env.BooleanValue#FALSE}.
  *
  * Note that the return value is not modified if
- * the method returns {@link com.caucho.quercus.env.NullValue.NULL}.
+ * the method returns {@link com.caucho.quercus.env.NullValue#NULL}.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

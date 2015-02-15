@@ -1030,7 +1030,7 @@ public class PDOStatement
 
 
   /**
-   * Sets the fetch mode, the default is {@link PDO.FETCH_BOTH}.
+   * Sets the fetch mode, the default is {@link PDO#FETCH_BOTH}.
    */
   public boolean setFetchMode(Env env, int fetchMode, Value[] args)
   {

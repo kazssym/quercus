@@ -116,7 +116,6 @@ abstract public class AbstractPattern {
    *
    * @param node the starting node.
    * @param env the variable environment.
-   * @param context the context node.
    *
    * @return an iterator selecting unique nodes.
    */
@@ -211,7 +210,7 @@ abstract public class AbstractPattern {
    * Returns the first node in the selection order.
    *
    * @param node the current node
-   * @param variable environment
+   * @param env environment
    *
    * @return the first node
    */
