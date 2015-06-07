@@ -36,7 +36,8 @@ import com.caucho.vfs.*;
 import java.security.MessageDigest;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
