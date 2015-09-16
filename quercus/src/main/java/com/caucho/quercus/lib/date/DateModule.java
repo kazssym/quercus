@@ -1328,6 +1328,29 @@ public class DateModule extends AbstractQuercusModule {
     return new DateTimeZone(timeZone);
   }
 
+  /**
+   * Implements the <code>timezone_transitions_get</code> function for
+   * WordPress to work.
+   *
+   * @param dateTimeZone {@link DateTimeZone} object
+   * @param timestampBegin optional begin timestamp (currently ignored)
+   * @param timestampEnd optional end timestamp (currently ignored)
+   * @return numerically indexed array containing an associative array of the
+   * next transition, or <code>null</code> on failure
+   * @author Kaz Nishimura
+   */
+  @ReturnNullAsFalse
+  public static ArrayValue timezone_transitions_get(DateTimeZone dateTimeZone,
+                                                    @Optional int timestampBegin,
+                                                    @Optional int timestampEnd)
+  {
+    if (dateTimeZone == null) {
+      return null;
+    }
+
+    return dateTimeZone.getTransitions(timestampBegin, timestampEnd);
+  }
+
   static {
     addConstant(_constMap, "DATE_ATOM", DateTime.ATOM);
     addConstant(_constMap, "DATE_COOKIE", DateTime.COOKIE);
@@ -1347,11 +1370,5 @@ public class DateModule extends AbstractQuercusModule {
   public Map<StringValue, Value> getConstMap() {
       return _constMap;
   }
-  /* commented out for wordpress-2.8.1
-  public static Value timezone_transitions_get(DateTimeZone dateTimeZone)
-  {
-    return dateTimeZone.getTransitions();
-  }
-  */
 }
 

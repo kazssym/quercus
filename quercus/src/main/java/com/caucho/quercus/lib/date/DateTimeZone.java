@@ -29,9 +29,14 @@
 
 package com.caucho.quercus.lib.date;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import com.caucho.quercus.annotation.Optional;
+import com.caucho.quercus.annotation.ReturnNullAsFalse;
 import com.caucho.quercus.env.ArrayValue;
 import com.caucho.quercus.env.ArrayValueImpl;
 import com.caucho.quercus.env.BooleanValue;
@@ -147,13 +152,67 @@ public class DateTimeZone implements Cloneable
     return _timeZone.getOffset(dateTime.getTime()) / 1000L;
   }
 
-  /* commented out for wordpress-2.8.1
-  public Value getTransitions(@Optional int timestampBegin,
-                              @Optional int timestampEnd)
+  /**
+   * Implements the <code>DateTimeZone::getTransitions</code> function for
+   * WordPress to work.
+   *
+   * @param timestampBegin optional begin timestamp (currently ignored)
+   * @param timestampEnd optional end timestamp (currently ignored)
+   * @return numerically indexed array containing an associative array of the
+   * next transition, or <code>null</code> on failure
+   * @author Kaz Nishimura
+   */
+  @ReturnNullAsFalse
+  public ArrayValue getTransitions(@Optional int timestampBegin,
+                                   @Optional int timestampEnd)
   {
-    throw new UnimplementedException("DateTimeZone->getTransitions()");
+    // TODO: Handle timestampBegin and timestampEnd.
+    ArrayValue array = new ArrayValueImpl();
+    if (_timeZone.observesDaylightTime()) {
+      // TODO: Find all past transitions.
+      Date now = new Date();
+      boolean isDST = _timeZone.inDaylightTime(now);
+      // TODO: Implement a better method.
+      final long DAY = 86400 * 1000L;
+      final long MINUTE = 60 * 1000L;
+      // Rounds down to days.
+      long time = now.getTime() / DAY * DAY;
+      long limit = time + 365 * DAY;
+      Date date = now;
+      while (time <= limit) {
+        time += DAY;
+        date = new Date(time);
+        if (_timeZone.inDaylightTime(date) != isDST) {
+          // Goes back one day.
+          time -= DAY;
+          break;
+        }
+      }
+      if (time <= limit) {
+        final DateFormat ISO8601_FORMAT
+                = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                                       Locale.ROOT);
+        // Assumes transitions occur at zero seconds.
+        for (;;) {
+          time += MINUTE;
+          date = new Date(time);
+          if (_timeZone.inDaylightTime(date) != isDST) {
+            break;
+          }
+        }
+        isDST = _timeZone.inDaylightTime(date);
+        ArrayValue transition = new ArrayValueImpl();
+        transition.put("ts", time / 1000);
+        transition.put("time", ISO8601_FORMAT.format(date));
+        transition.put("offset", _timeZone.getOffset(time) / 1000);
+        transition.put("isdst", isDST ? "1" : "");
+        transition.put("abbr", _timeZone.getDisplayName(isDST,
+                                                        TimeZone.SHORT));
+        array.put(transition);
+      }
+    }
+    return array;
   }
-  */
 
   protected TimeZone getTimeZone()
   {
