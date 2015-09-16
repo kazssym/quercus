@@ -21,7 +21,7 @@
   <groupId>org.vx68k.quercus</groupId>
   <artifactId>quercus-parent</artifactId>
   <packaging>pom</packaging>
-  <name>Quercus Parent</name>
+  <name>Quercus (Parent)</name>
   <version>4.0.43-MOD3-SNAPSHOT</version>
   <description>Parent project of Quercus.</description>
   <url>https://bitbucket.org/kazssym/quercus-maven</url>
