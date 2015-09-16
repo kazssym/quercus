@@ -24,10 +24,10 @@
   <name>Quercus (Parent)</name>
   <version>4.0.43-MOD3-SNAPSHOT</version>
   <description>Parent project of Quercus.</description>
-  <url>https://bitbucket.org/kazssym/quercus-maven</url>
+  <url>https://bitbucket.org/kazssym/quercus</url>
   <issueManagement>
     <system>Bitbucket</system>
-    <url>https://bitbucket.org/kazssym/quercus-maven/issues</url>
+    <url>https://bitbucket.org/kazssym/quercus/issues</url>
   </issueManagement>
   <inceptionYear>2005</inceptionYear>
   <developers>
@@ -52,8 +52,8 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:hg:https://bitbucket.org/kazssym/quercus-maven</connection>
-    <developerConnection>scm:hg:https://bitbucket.org/kazssym/quercus-maven</developerConnection>
+    <connection>scm:hg:https://bitbucket.org/kazssym/quercus</connection>
+    <developerConnection>scm:hg:https://bitbucket.org/kazssym/quercus</developerConnection>
     <tag>default</tag>
     <url>https://bitbucket.org/kazssym/quercus-maven/src</url>
   </scm>
