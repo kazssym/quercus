@@ -219,6 +219,11 @@ public class AbstractRolloverLog implements Closeable {
     else
       return _archiveFormat;
   }
+  
+  public String getArchiveSuffix()
+  {
+    return _archiveSuffix;
+  }
 
   /**
    * Sets the log rollover cron specification
@@ -465,6 +470,12 @@ public class AbstractRolloverLog implements Closeable {
       if (_zipOut != null)
         _zipOut.flush();
     }
+    
+    long now = CurrentTime.getCurrentTime();
+    
+    if (_nextPeriodEnd < now) {
+      _rolloverWorker.wake();
+    }
   }
 
   /**
@@ -473,8 +484,9 @@ public class AbstractRolloverLog implements Closeable {
   private void rolloverLogTask()
   {
     try {
-      if (_isInit)
+      if (_isInit) {
         flush();
+      }
     } catch (Exception e) {
       log.log(Level.WARNING, e.toString(), e);
     }
@@ -726,7 +738,7 @@ public class AbstractRolloverLog implements Closeable {
   {
     StringBuilder sb = new StringBuilder();
 
-    String archiveFormat = getArchiveFormat();
+    String archiveFormat = getArchiveFormat() + getArchiveSuffix();
 
     for (int i = 0; i < archiveFormat.length(); i++) {
       char ch = archiveFormat.charAt(i);

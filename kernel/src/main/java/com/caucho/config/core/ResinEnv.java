@@ -81,8 +81,9 @@ public class ResinEnv extends ResinControl implements EnvironmentBean {
   {
     Object object = getObject();
     
-    if (object != null)
+    if (object != null) {
       _init.configure(object);
+    }
   }
 }
 

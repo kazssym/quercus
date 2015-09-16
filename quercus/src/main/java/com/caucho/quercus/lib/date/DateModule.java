@@ -1344,10 +1344,6 @@ public class DateModule extends AbstractQuercusModule {
                                                     @Optional int timestampBegin,
                                                     @Optional int timestampEnd)
   {
-    if (dateTimeZone == null) {
-      return null;
-    }
-
     return dateTimeZone.getTransitions(timestampBegin, timestampEnd);
   }
 
@@ -1367,7 +1363,8 @@ public class DateModule extends AbstractQuercusModule {
 
 
   @Override
-  public Map<StringValue, Value> getConstMap() {
+  public Map<StringValue, Value> getConstMap()
+  {
       return _constMap;
   }
 }
