@@ -96,6 +96,13 @@ public class VarType<D extends GenericDeclaration> extends BaseType
     return bounds;
   }
 
+  /*
+  public AnnotatedType []getAnnotatedBounds()
+  {
+    return null;
+  }
+  */
+
   @Override
   protected BaseType []getWildcardBounds()
   {
@@ -189,16 +196,20 @@ public class VarType<D extends GenericDeclaration> extends BaseType
       return null;
     }
 
-    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
+    {
       return null;
     }
 
-    public Annotation[] getAnnotations() {
-      return new Annotation[0];
+    public Annotation []getAnnotations()
+    {
+      return null;
     }
 
-    public Annotation[] getDeclaredAnnotations() {
-      return new Annotation[0];
+    public Annotation []getDeclaredAnnotations()
+    {
+      return null;
     }
+
   }
 }
