@@ -237,7 +237,7 @@ public class LazyClassDef extends CompiledClassDef
     getClassDef().initClassFields(cl, bindingClassName);
   }
 
-  /*
+  /**
    * Creates a new object.
    */
   @Override
@@ -259,9 +259,9 @@ public class LazyClassDef extends CompiledClassDef
    * Initialize the quercus class.
    */
   @Override
-  public void initInstance(Env env, Value value)
+  public void initInstance(Env env, Value value, boolean isInitFieldValues)
   {
-    getClassDef().initInstance(env, value);
+    getClassDef().initInstance(env, value, isInitFieldValues);
   }
 
   /**
@@ -311,6 +311,12 @@ public class LazyClassDef extends CompiledClassDef
   public Set<Map.Entry<StringValue,ClassField>> fieldSet()
   {
     return getClassDef().fieldSet();
+  }
+
+  @Override
+  public ClassField getField(StringValue name)
+  {
+    return getClassDef().getField(name);
   }
 
   @Override

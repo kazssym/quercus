@@ -362,7 +362,7 @@ public class CurlModule
       return BooleanValue.FALSE;
     }
 
-    return curl.execute(env);
+    return curl.execute(env, true);
   }
 
   /**
@@ -747,8 +747,10 @@ public class CurlModule
         curl.setIsVerifySSLPeer(value.toBoolean());
         break;
       case CURLOPT_UPLOAD:
-        if (value.toBoolean())
-          curl.setRequestMethod("PUT");
+        if (value.toBoolean()) {
+          // CURLOPT_UPLOAD implies PUT but not necessarily
+          //curl.setRequestMethod("PUT");
+        }
         break;
       case CURLOPT_VERBOSE:
         curl.setIsVerbose(value.toBoolean());
@@ -863,6 +865,10 @@ public class CurlModule
       //
       // strings
       //
+      case CURLOPT_CAINFO:
+        env.notice(L.l("custom certificates not supported"));
+        break;
+
       case CURLOPT_COOKIE:
         curl.setCookie(value.toString());
         break;

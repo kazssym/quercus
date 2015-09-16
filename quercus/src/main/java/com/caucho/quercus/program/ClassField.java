@@ -97,23 +97,36 @@ public class ClassField
 
   public static StringValue getOrdinaryName(StringValue canonicalName)
   {
-    if (isPrivate(canonicalName)) {
-      int p = canonicalName.lastIndexOf('\u0000');
+    int p = canonicalName.lastIndexOf('\u0000');
 
+    if (p >= 0) {
       return canonicalName.substring(p + 1);
-    }
-    else if (isProtected(canonicalName)) {
-      return canonicalName.substring(1);
     }
     else {
       return canonicalName;
     }
   }
 
+  public static StringValue getCanonicalName(Env env,
+                                             String classContext,
+                                             StringValue name)
+  {
+    ClassDef classDef = env.findClassDef(classContext);
+    ClassField entry = classDef.getField(name);
+
+    if (entry != null) {
+      return entry.getCanonicalName();
+    }
+
+    return name;
+  }
+
   public static StringValue createProtectedCanonicalName(StringValue sb,
                                                          StringValue name)
   {
+    sb.append('\u0000');
     sb.append('*');
+    sb.append('\u0000');
     sb.append(name);
 
     return sb;
@@ -140,17 +153,24 @@ public class ClassField
 
   public static boolean isPublic(StringValue canonicalName)
   {
-    return ! isProtected(canonicalName) && ! isPrivate(canonicalName);
+    int p = canonicalName.lastIndexOf('\u0000');
+
+    return p >= 0;
   }
 
   public static boolean isPrivate(StringValue canonicalName)
   {
-    return canonicalName.startsWith("\u0000");
+    return canonicalName.length() > 3
+           && canonicalName.charAt(0) == '\u0000'
+           && canonicalName.charAt(1) != '*';
   }
 
   public static boolean isProtected(StringValue canonicalName)
   {
-    return canonicalName.startsWith("*");
+    return canonicalName.length() > 3
+           && canonicalName.charAt(0) == '\u0000'
+           && canonicalName.charAt(1) == '*'
+           && canonicalName.charAt(2) == '\u0000';
   }
 
   public static StringValue getDeclaringClass(StringValue sb,
@@ -233,6 +253,15 @@ public class ClassField
   @Override
   public String toString()
   {
-    return getClass().getSimpleName() + "[" + _canonicalName + "]";
+    String access = "";
+
+    if (isPrivate()) {
+      access = "private:";
+    }
+    else if (isProtected()) {
+      access = "protected:";
+    }
+
+    return getClass().getSimpleName() + "[" + _declaringClassName + ":" + access + _name + "]";
   }
 }
