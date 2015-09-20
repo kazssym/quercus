@@ -56,7 +56,7 @@
     <connection>scm:hg:https://bitbucket.org/kazssym/quercus</connection>
     <developerConnection>scm:hg:https://bitbucket.org/kazssym/quercus</developerConnection>
     <tag>default</tag>
-    <url>https://bitbucket.org/kazssym/quercus-maven/src</url>
+    <url>https://bitbucket.org/kazssym/quercus/src</url>
   </scm>
   <organization>
     <name>Caucho Technology, Inc</name>
