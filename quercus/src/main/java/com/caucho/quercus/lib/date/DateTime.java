@@ -29,6 +29,8 @@
 
 package com.caucho.quercus.lib.date;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import com.caucho.quercus.UnimplementedException;
 import com.caucho.quercus.annotation.Optional;
 import com.caucho.quercus.env.Env;
@@ -230,11 +232,34 @@ public class DateTime implements DateTimeInterface, Cloneable
     _qDate.setDate(year, month - 1, day);
   }
 
+  /**
+   * Sets an ISO <em>week</em> date.
+   * @param year year
+   * @param week week of the year
+   * @param day day of the week
+   * @author Kaz Nishimura
+   * @since 4.0.43-MOD3
+   */
   public void setISODate(int year,
                          int week, //yes, week, not month
-                         @Optional int day)
+                         @Optional("1") int day)
   {
-    throw new UnimplementedException("DateTime::setISODate()");
+    // Adjusts the day starts at Sunday and within 7 days.
+    final int dayOfWeek = day % 7;
+    if (dayOfWeek == 0) {
+      day -= 7;
+    }
+    week += (day - dayOfWeek) / 7;
+
+    Calendar calendar = new GregorianCalendar(_dateTimeZone.getTimeZone());
+    calendar.setFirstDayOfWeek(Calendar.MONDAY);
+    calendar.setMinimalDaysInFirstWeek(4);
+    calendar.set(Calendar.YEAR, year);
+    calendar.set(Calendar.WEEK_OF_YEAR, week);
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY + dayOfWeek);
+    _qDate.setDate(
+        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH));
   }
 
   @Override
