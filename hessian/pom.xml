@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.vx68k.quercus</groupId>
     <artifactId>quercus-parent</artifactId>
-    <version>4.0.43-MOD3-SNAPSHOT</version>
+    <version>4.0.42-MOD3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>hessian</artifactId>
