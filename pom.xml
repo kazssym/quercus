@@ -55,7 +55,7 @@
   <scm>
     <connection>scm:hg:https://bitbucket.org/kazssym/quercus</connection>
     <developerConnection>scm:hg:https://bitbucket.org/kazssym/quercus</developerConnection>
-    <tag>default</tag>
+    <tag>release</tag>
     <url>https://bitbucket.org/kazssym/quercus/src</url>
   </scm>
   <organization>
