@@ -47,8 +47,9 @@
   </developers>
   <licenses>
     <license>
-      <name>GNU General Public License version 2 or later</name>
-      <url>http://www.gnu.org/licenses/gpl.html</url>
+      <name>GNU General Public License v2.0 or later</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
   <scm>
