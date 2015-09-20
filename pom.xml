@@ -22,7 +22,7 @@
   <artifactId>quercus-parent</artifactId>
   <packaging>pom</packaging>
   <name>Quercus (Parent)</name>
-  <version>4.0.42-MOD3-SNAPSHOT</version>
+  <version>4.0.42-MOD3</version>
   <description>Parent project of Quercus.</description>
   <url>https://bitbucket.org/kazssym/quercus/wiki/</url>
   <issueManagement>
@@ -55,7 +55,7 @@
   <scm>
     <connection>scm:hg:https://bitbucket.org/kazssym/quercus</connection>
     <developerConnection>scm:hg:https://bitbucket.org/kazssym/quercus</developerConnection>
-    <tag>release</tag>
+    <tag>release/4.0.42-MOD3</tag>
     <url>https://bitbucket.org/kazssym/quercus/src</url>
   </scm>
   <organization>
